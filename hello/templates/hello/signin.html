@@ -1,0 +1,40 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <link rel="stylesheet" href="{% static 'css/signup.css' %}"/>
+        <title>Sign In</title>
+    </head>
+    <header>
+        <nav>
+            <a href="/signin/" style="padding-left: 15px;">noodlr</a>
+            <div style="float: right; padding-right: 15px;">
+                <a href="/aboutus/">about us</a>
+            </div>
+        </nav>
+    </header>      
+    <body>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 mx-auto my-5">
+                    <h1 style="margin-top:108px;">sign in</h1> 
+                    <form method="post" action="/signin/">
+                        {% csrf_token %}
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="email" name="email" placeholder="email"/>
+                            </div>
+                            <div class="form-group">
+                                <input type="password" class="form-control" id="password" name="password" placeholder="password"/>
+                            </div>
+                            <div class="form-group d-flex justify-content-between">
+                                <button class="btn btn-primary" type="submit">sign in</button>
+                                <a href="/" class="ml-2">dont have an account?</a>
+                            </div>
+                    </form>
+                </div>
+            </div>
+        </div>        
+    </body>
+</html>
+

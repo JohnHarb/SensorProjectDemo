@@ -1,0 +1,64 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <link rel="stylesheet" href="{% static 'css/home.css' %}"/>
+        <title>Home Page</title>
+    </head>
+    <header>
+        <nav>
+            <a href="/home/" style="padding-left: 15px;">noodlr</a>
+            <div style="float: right; padding-right: 15px;">
+                <a href="/aboutus/">about us</a>
+                <a href="/profile/">profile</a>
+            </div>
+        </nav>
+    </header>   
+    <body>
+        <div class="container" style="display:grid; grid-template-rows: 1fr 1fr;">
+            <div id="sensors" class="section" style="grid-row: 1; margin-top: 20px;">
+                <h2>your sensors:</h2>
+                <div class="sensor-container" style="display: flex; flex-wrap:wrap;">
+                    <div class="sensor-box" style="margin-left: 20px;">
+                        <p>Sensor ID: S1</p>
+                        <p>Sensor Name: Temperature Sensor</p>
+                        <p>Tanks: Tank 1, Tank 2</p>
+                    </div>
+                    <div class="sensor-box" style="margin-left: 20px;">
+                        <p>Sensor ID: S2</p>
+                        <p>Sensor Name: pH Sensor</p>
+                        <p>Tanks: Tank 2, Tank 3</p>
+                    </div>
+                    <div class="sensor-box" style="margin-left: 20px;">
+                        <p>Sensor ID: S3</p>
+                        <p>Sensor Name: Salinity Sensor</p>
+                        <p>Tanks: Tank 3</p>
+                    </div>
+                    <button id= "addSensor" type="button" style="margin-left: 20px; align-self: flex-start;">+</button>
+                </div>
+            </div>                        
+            <div id="tank" class="section" style="grid-row: 2; margin-top: -40px;">
+                <h2>your tanks:</h2>
+                <div class="tank-container" style="display: flex; flex-wrap:wrap;">
+                    <div class="tank-box" style="margin-left: 20px;">
+                        <p>Sensor: Temperature Sensor</p>
+                        <p>Tank Name: Reef Tank</p>
+                        <button class="manage-button">Manage Sealife</button>
+                    </div>
+                    <div class="tank-box" style="margin-left: 20px;">
+                        <p>Sensor: pH Sensor</p>
+                        <p>Tank Name: Saltwater Tank</p>
+                        <button class="manage-button">Manage Sealife</button>
+                    </div>
+                    <div class="tank-box" style="margin-left: 20px;">
+                        <p>Sensor: Salinity Sensor</p>
+                        <p>Tank Name: Freshwater Tank</p>
+                        <p><button class="manage-button">Manage Sealife</button></p>
+                    </div>
+                    <button id= "addTank" type="button" style="margin-left: 20px; align-self: flex-start;">+</button>
+                </div>
+            </div>            
+        </div>  
+    </body>    
+</html>

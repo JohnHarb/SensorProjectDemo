@@ -1,0 +1,59 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    border: 1px solid #3b4e3b; /* Add a thin border around the entire container */
+    font-family: 'DejaVu Sans Mono', monospace;
+}
+/* Style the already have account link */
+a {
+    text-align: center;
+    font-size: 14px;
+    margin-top: 30px; /* Add more space between link and form */
+    font-family: 'DejaVu Sans Mono', monospace; /* Use the DejaVu Sans Mono font */
+    align-items: center; /* Align the link to the center */
+}
+
+header {
+    background-color: #6d9c6d; /* Same color as the create account button */
+    color: white;
+    font-size: 50px; /* Bigger font size */
+    height: 60px; /* Bigger height */
+    justify-content: space-between; /* Add space between elements */
+}
+
+header a, header div a {
+    color: white;
+}
+
+h1{
+    float: left; /* Move the form to the right */
+    text-align: center;
+    margin-right: 75px; /* Add space between the header and form */
+    font-family: 'DejaVu Sans Mono', monospace;
+}
+
+.supersection {
+    float: right; /* Move the form to the right */
+    text-align: center;
+    margin: 50px 0; /* Add more space between header and form */
+    align-items: center; /* Align the form to the center */
+    
+}
+.section {
+    border: 1px solid #6d9c6d; /* add border like the 'sensor-boxes' */
+    border-radius: 5px; /* add rounded edges like the 'sensor-boxes' */
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+button {
+    background-color: #6d9c6d; /* Change to a seaweed/earth tone color */
+    color: white;
+    border-radius: 25px;
+    padding: 5px 10px; /* Increase the padding for the submit button */
+    font-family: 'DejaVu Sans Mono', monospace; /* Use the DejaVu Sans Mono font */
+}
+
+

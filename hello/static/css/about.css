@@ -1,0 +1,57 @@
+.container {
+    height: 100vh;
+    border: 1px solid #3b4e3b; /* Add a thin border around the entire container */
+    font-family: 'DejaVu Sans Mono', monospace;
+}
+/* Style the already have account link */
+a {
+    text-align: center;
+    font-size: 14px;
+    color: #6d9c6d; /* Change to a seaweed/earth tone color */
+    margin-top: 30px; /* Add more space between link and form */
+    font-family: 'DejaVu Sans Mono', monospace; /* Use the DejaVu Sans Mono font */
+    align-items: center; /* Align the link to the center */
+}
+
+h1{
+    text-align: center;
+    margin-top: 40px;
+    margin-bottom: 30px;
+}
+
+.supersection {
+    display: flex;
+    flex-wrap: nowrap; /* prevent wrapping to next line */
+    justify-content: space-between; /* distribute the sections evenly horizontally */
+    align-items: center; /* center the sections vertically */
+}
+
+.section {
+    border: 1px solid #6d9c6d; /* add border like the 'sensor-boxes' */
+    border-radius: 5px; /* add rounded edges like the 'sensor-boxes' */
+    padding: 10px;
+    margin: 0px 70px;
+    min-width: 200px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.headersection{
+    border: 1px solid #6d9c6d; /* add border like the 'sensor-boxes' */
+    border-radius: 5px; /* add rounded edges like the 'sensor-boxes' */
+    padding: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+header {
+    background-color: #6d9c6d; /* Same color as the create account button */
+    color: white;
+    font-size: 50px; /* Bigger font size */
+    height: 60px; /* Bigger height */
+    justify-content: space-between; /* Add space between elements */
+}
+
+header a, header div a {
+    color: white;
+}
