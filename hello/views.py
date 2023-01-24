@@ -1,10 +1,10 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
 from django.views import View 
 from django.http import JsonResponse
-from hello.models import *
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
+from hello.models import *
+import json
 import re
 
 regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
@@ -59,9 +59,9 @@ class profile(View):
     user = request.user
     tNum = str(len(Tank.objects.filter(user=user)))
     sNum = str(len(Sensor.objects.filter(user=user)))
-    return render(request,'hello/profile.html', {"name": user.first_name + " " + user.last_name, "email": user.email, "tanks": tNum, "sensors": sNum})
+    return render(request,'hello/profile.html', {"name": user.first_name + " " + user.last_name, "email": user.email, "tanks": tNum})
 
-class aboutus(View):
+class aboutUs(View):
   def get(self, request):
    return render(request,'hello/aboutus.html')
 
@@ -69,3 +69,12 @@ class signOut(View):
   def get(self, request):
     logout(request)
     return redirect('/signin/')
+
+class dbGet(View):
+  def get(self, request):
+    print("valid")
+    tanks = Tank.objects.filter(user=request.user).values()
+    print(list(tanks))
+    return JsonResponse(json.dumps(list(tanks)), safe=False)
+  def post(self, request):
+    pass

@@ -5,10 +5,10 @@ class Sensor(models.Model):
   user = models.ForeignKey(User, on_delete=models.CASCADE)  
   sname = models.CharField(max_length=20)
 
-
 class Tank(models.Model):
   user = models.ForeignKey(User, on_delete=models.CASCADE)    
   tname = models.CharField(max_length=20)
+  sensor = models.ForeignKey(Sensor, on_delete=models.CASCADE)
 
 class Animal(models.Model):
   user = models.ForeignKey(User, on_delete=models.CASCADE)  

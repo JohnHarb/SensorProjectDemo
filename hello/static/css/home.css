@@ -33,6 +33,7 @@ button {
     border-radius: 25px;
     padding: 5px 10px; /* Increase the padding for the submit button */
     font-family: 'DejaVu Sans Mono', monospace; /* Use the DejaVu Sans Mono font */
+    margin-right: 5px;
 }
 
 .section{

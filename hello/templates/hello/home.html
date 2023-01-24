@@ -4,6 +4,10 @@
     <head>
         <meta charset="utf-8" />
         <link rel="stylesheet" href="{% static 'css/home.css' %}"/>
+        <script
+            src="https://code.jquery.com/jquery-3.6.0.js"
+            integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
+            crossorigin="anonymous"></script>
         <title>Home Page</title>
     </head>
     <header>
@@ -19,7 +23,7 @@
         <div class="container" style="display:grid; grid-template-rows: 1fr 1fr;">
             <div id="sensors" class="section" style="grid-row: 1; margin-top: 20px;">
                 <h2>your sensors:</h2>
-                <div class="sensor-container" style="display: flex; flex-wrap:wrap;">
+                <div id="sensor-container" style="display: flex; flex-wrap:wrap;">
                     <div class="sensor-box" style="margin-left: 20px;">
                         <p>Sensor ID: S1</p>
                         <p>Sensor Name: Temperature Sensor</p>
@@ -38,30 +42,11 @@
                     <button id= "addSensor" type="button" style="margin-left: 20px; align-self: flex-start;">+</button>
                 </div>
             </div>                        
-            <div id="tank" class="section" style="grid-row: 2; margin-top: -40px;">
-                <h2>your tanks:</h2>
-                <div class="tank-container" style="display: flex; flex-wrap:wrap;">
-                    <div class="tank-box" style="margin-left: 20px;">
-                        <p>Sensor: Temperature Sensor</p>
-                        <p>Tank Name: Reef Tank</p>
-                        <button class="manage-button">manage sealife</button>
-                        <button class="manage-button" style="background-color: red !important;">delete tank</button>
-                    </div>
-                    <div class="tank-box" style="margin-left: 20px;">
-                        <p>Sensor: pH Sensor</p>
-                        <p>Tank Name: Saltwater Tank</p>
-                        <button class="manage-button">manage sealife</button>
-                        <button class="manage-button" style="background-color: red !important;">delete tank</button>
-                    </div>
-                    <div class="tank-box" style="margin-left: 20px;">
-                        <p>Sensor: Salinity Sensor</p>
-                        <p>Tank Name: Freshwater Tank</p>
-                        <button class="manage-button">manage sealife</button>
-                        <button class="manage-button" style="background-color: red !important;">delete tank</button>
-                    </div>
-                    <button id= "addTank" type="button" style="margin-left: 20px; align-self: flex-start;">+</button>
-                </div>
+            <div id="tanks" class="section" style="grid-row: 2; margin-top: -40px;">
+                <h2 style="margin-top: -50px;">your tanks:</h2>
+                <div id="tank-container" style="display: flex; flex-wrap:wrap;"></div>
             </div>            
-        </div>  
+        </div> 
+        <script src="{% static 'js/home.js' %}"></script> 
     </body>    
 </html>
