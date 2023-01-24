@@ -8,7 +8,7 @@ class Sensor(models.Model):
 class Tank(models.Model):
   user = models.ForeignKey(User, on_delete=models.CASCADE)    
   tname = models.CharField(max_length=20)
-  sensor = models.ForeignKey(Sensor, on_delete=models.CASCADE)
+  sensor = models.ForeignKey(Sensor, on_delete=models.CASCADE, null=True, blank=True)
 
 class Animal(models.Model):
   user = models.ForeignKey(User, on_delete=models.CASCADE)  
@@ -22,5 +22,3 @@ class Animal(models.Model):
     ] 
   animalType = models.CharField(max_length=1, choices=atypes)
   aname = models.CharField(max_length=20)
-  
-

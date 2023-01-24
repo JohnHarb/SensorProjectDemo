@@ -52,13 +52,14 @@ class signIn(View):
  
 class home(View):
   def get(self, request):
-   return render(request,'hello/home.html')
+    tanks = Tank.objects.all()
+    sensors = Sensor.objects.all()
+    return render(request,'hello/home.html', {"tanks": tanks, "sensors": sensors})
 
 class profile(View):
   def get(self, request):
     user = request.user
     tNum = str(len(Tank.objects.filter(user=user)))
-    sNum = str(len(Sensor.objects.filter(user=user)))
     return render(request,'hello/profile.html', {"name": user.first_name + " " + user.last_name, "email": user.email, "tanks": tNum})
 
 class aboutUs(View):
@@ -70,11 +71,9 @@ class signOut(View):
     logout(request)
     return redirect('/signin/')
 
-class dbGet(View):
+class tankManage(View):
   def get(self, request):
-    print("valid")
     tanks = Tank.objects.filter(user=request.user).values()
-    print(list(tanks))
     return JsonResponse(json.dumps(list(tanks)), safe=False)
   def post(self, request):
     pass
