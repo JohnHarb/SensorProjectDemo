@@ -64,3 +64,10 @@ header {
 header a, header div a {
     color: white;
 }
+
+.error{
+    color: red !important;
+    font-size: 14px;
+    font-family: 'DejaVu Sans Mono', monospace;
+    margin-bottom: 30px;
+}

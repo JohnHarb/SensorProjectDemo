@@ -21,6 +21,13 @@
                     <h1 style="margin-top:108px;">sign in</h1> 
                     <form method="post" action="/signin/">
                         {% csrf_token %}
+                            {% if messages %}
+                                {% for message in messages %}
+                                <div class="form-group">
+                                    <p class="{{ message.tags }}">{{ message }}</p>
+                                </div>
+                                {% endfor %}
+                            {% endif %}
                             <div class="form-group">
                                 <input type="text" class="form-control" id="email" name="email" placeholder="email"/>
                             </div>
