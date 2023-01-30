@@ -52,8 +52,8 @@ class signIn(View):
  
 class home(View):
   def get(self, request):
-    tanks = Tank.objects.all()
-    sensors = Sensor.objects.all()
+    tanks = Tank.objects.filter(user=request.user)
+    sensors = Sensor.objects.filter(user=request.user)
     return render(request,'hello/home.html', {"tanks": tanks, "sensors": sensors})
 
 class profile(View):
@@ -75,5 +75,20 @@ class tankManage(View):
   def get(self, request):
     tanks = Tank.objects.filter(user=request.user).values()
     return JsonResponse(json.dumps(list(tanks)), safe=False)
+
   def post(self, request):
-    pass
+    tname = request.POST["tname"]
+    sensor = request.POST["sensor"]
+    if len(Tank.objects.filter(user = request.user, tname = tname)) == 1:
+      messages.error(request, "tank exists already")
+      return redirect('/home/')
+    if sensor != 'none':
+      sensorToAdd = Sensor.objects.filter(id=sensor)[0]
+      if len(Tank.objects.filter(user = request.user, sensor=sensorToAdd)) == 1:
+        messages.error(request, "sensor assigned already")
+        return redirect('/home/')
+      newTank = Tank(tname=tname, user=request.user, sensor=sensorToAdd)
+    else:
+      newTank = Tank(tname=tname, user=request.user)
+    newTank.save()
+    return redirect('/home/')

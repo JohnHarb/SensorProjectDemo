@@ -67,3 +67,10 @@ input[type="text"], .form-select{
     border-color: #DAE5CC; /* Change to a seaweed/earth tone color */
     font-family: 'DejaVu Sans Mono', monospace; /* Use the DejaVu Sans Mono font */
 }
+
+.error{
+    color: red !important;
+    font-size: 14px;
+    font-family: 'DejaVu Sans Mono', monospace;
+    margin-bottom: 10px;
+}

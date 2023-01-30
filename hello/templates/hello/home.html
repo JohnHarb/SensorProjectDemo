@@ -37,10 +37,10 @@
                     <div class="sensor-box" style="margin-left: 20px;">
                         <form>
                             <div class="form-group">
-                                <input type="text" class="form-control" id="sname" name="sname" placeholder="sensor name"/>
+                                <input type="text" class="form-control" id="sname" name="sname" placeholder="sensor name" required/>
                             </div>
                             <div class="form-group">
-                                <input type="text" class="form-control" id="sID" name="sID" placeholder="sensor ID"/>
+                                <input type="text" class="form-control" id="sID" name="sID" placeholder="sensor ID" required/>
                             </div>
                             <div class="form-group">
                                 <select class="form-select" id="tank" name="tank">
@@ -62,9 +62,17 @@
                 <h2 style="margin-top: -50px;">your tanks:</h2>
                 <div id="tank-container" style="display: flex; flex-wrap:wrap;">
                     <div id= "tank-form" class="tank-box" style="margin-left: 20px;">
-                        <form>
+                        <form method="post" action="/tankmanage/">
+                            {% csrf_token %}
+                            {% if messages %}
+                                {% for message in messages %}
+                                <div class="form-group">
+                                    <p class="{{ message.tags }}">{{ message }}</p>
+                                </div>
+                                {% endfor %}
+                            {% endif %}
                             <div class="form-group">
-                                <input type="text" class="form-control" id="tname" name="tname" placeholder="tank name" style="margin-bottom: 10px; margin-top: 10px;"/>
+                                <input type="text" class="form-control" id="tname" name="tname" placeholder="tank name" style="margin-bottom: 10px; margin-top: 10px;" required/>
                             </div>
                             <div class="form-group">
                                 <select class="form-select" id="sensor" name="sensor" style="margin-bottom: 10px;">
