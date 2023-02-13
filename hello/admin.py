@@ -4,4 +4,4 @@ from .models import *
 admin.site.register(Profile)
 admin.site.register(Tank)
 admin.site.register(Parameters)
-admin.site.register(Log_Data)
+admin.site.register(LogData)
