@@ -53,8 +53,8 @@ class signIn(View):
 class home(View):
   def get(self, request):
     tanks = Tank.objects.filter(user=request.user)
-    sensors = Sensor.objects.filter(user=request.user)
-    return render(request,'hello/home.html', {"tanks": tanks, "sensors": sensors})
+    #sensors = Sensor.objects.filter(user=request.user)
+    #return render(request,'hello/home.html', {"tanks": tanks, "sensors": sensors})
 
 class profile(View):
   def get(self, request):
@@ -70,7 +70,7 @@ class signOut(View):
   def get(self, request):
     logout(request)
     return redirect('/signin/')
-
+"""
 class tankManage(View):
   def get(self, request):
     tanks = Tank.objects.filter(user=request.user).values()
@@ -91,4 +91,4 @@ class tankManage(View):
     else:
       newTank = Tank(tname=tname, user=request.user)
     newTank.save()
-    return redirect('/home/')
+    return redirect('/home/')"""
