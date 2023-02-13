@@ -1,18 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
-from phonenumber_field.modelfields import \
-    PhoneNumberField  # library for verifying phonenumbers, including international
+from phonenumber_field.modelfields import PhoneNumberField  # library for verifying phonenums, including international
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from enum import Enum
 
-
-class Parameter_Types(Enum):
-    temp = 1
-    ph = 2
-    salinity = 3
-    ammonia = 4
-    # todo add more
 
 
 # todo tank & general notification class(es)
@@ -48,7 +39,7 @@ class Tank(models.Model):
     ]  # may split or add more types later
 
     type = models.CharField(max_length=2, choices=types)
-    volume = models.IntegerField(max_length=10)
+    volume = models.IntegerField()
     module_id = models.CharField(max_length=10, blank=True)
     # one to one relationship to parameters model
 
@@ -58,8 +49,14 @@ class Tank(models.Model):
 
 class LogData(models.Model):
     tank = models.ForeignKey(Tank, on_delete=models.CASCADE)  # many to one
-    type = models.IntegerField(choices=Parameter_Types)  # needs testing
-    value = models.DecimalField(max_digits=5)  # actual recorded number
+    types = [
+        ('te', 'temp'),
+        ('ph', 'ph'),
+        ('sa', 'salinity'),
+        ('am', 'ammonia'),
+    ]
+    type = models.IntegerField(choices=types)  # needs testing
+    value = models.DecimalField(max_digits=7, decimal_places=3)  # actual recorded number
     time_stamp = models.DateTimeField()  # should come from user input or Rpi
 
     def __str__(self):
@@ -69,17 +66,17 @@ class LogData(models.Model):
 class Parameters(models.Model):
     tank = models.OneToOneField(Tank, on_delete=models.CASCADE)  # one to one
     # unit: fahrenheit
-    temp_max = models.DecimalField(max_digits=5)
-    temp_min = models.DecimalField(max_digits=5)
+    temp_max = models.DecimalField(max_digits=7, decimal_places=3)
+    temp_min = models.DecimalField(max_digits=7, decimal_places=3)
     # unit: ph
-    ph_max = models.DecimalField(max_digits=5)
-    ph_min = models.DecimalField(max_digits=5)
+    ph_max = models.DecimalField(max_digits=7, decimal_places=3)
+    ph_min = models.DecimalField(max_digits=7, decimal_places=3)
     # unit: specific gravity (relative density to water, 2.0 = twice the density of water)
-    salinity_max = models.DecimalField(max_digits=5)
-    salinity_min = models.DecimalField(max_digits=5)
+    salinity_max = models.DecimalField(max_digits=7, decimal_places=3)
+    salinity_min = models.DecimalField(max_digits=7, decimal_places=3)
     # unit: ppm (parts per million)
-    ammonia_max = models.DecimalField(max_digits=5)
-    ammonia_min = models.DecimalField(max_digits=5)
+    ammonia_max = models.DecimalField(max_digits=7, decimal_places=3)
+    ammonia_min = models.DecimalField(max_digits=7, decimal_places=3)
     # todo more parameters
 
     def get_dict_of_tuples(self):
