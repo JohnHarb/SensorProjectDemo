@@ -29,7 +29,7 @@ def save_user_profile(sender, instance, **kwargs):
 
 
 class Tank(models.Model):
-    user = models.ForeignKey(Profile, on_delete=models.CASCADE)  # many to one\
+    user = models.ForeignKey(User, on_delete=models.CASCADE)  # many to one\
 
     # required, but optional to user, will use generated name if they don't enter one
     name = models.CharField( max_length=20)
@@ -80,17 +80,17 @@ class Parameters(models.Model):
     # todo more parameters
 
     def get_dict_of_tuples(self):
-        param_dict = {  # "type": (type_min, type_max) format
-            "temp": (self.temp_min, self.temp_max),
-            "ph": (self.ph_min, self.ph_max),
-            "salinity": (self.salinity_min, self.salinity_max),
-            "ammonia": (self.ammonia_min, self.ammonia_max),
+        param_dict = {  # "type": [type_min, type_max] format
+            "temp": [self.temp_min, self.temp_max],
+            "ph": [self.ph_min, self.ph_max],
+            "salinity": [self.salinity_min, self.salinity_max],
+            "ammonia": [self.ammonia_min, self.ammonia_max],
         }
         return param_dict
 
     # intended to get w/ helper, change, then set w/ helper
-    def set_dict_of_tuples(self, param_dict: dict[str, tuple[float, float]]):
-        if param_dict.keys != self.get_dict_of_tuples().keys():
+    def set_dict_of_tuples(self, param_dict: dict[str, list[float, float]]):
+        if list(param_dict.keys()) != list(self.get_dict_of_tuples().keys()):
             raise ValueError("The dict must match keys and types with get_dict_of_tuples()")
         else:
             self.temp_min = param_dict.get('temp')[0]
