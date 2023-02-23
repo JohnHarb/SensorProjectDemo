@@ -54,6 +54,8 @@ class LogData(models.Model):
         ('ph', 'ph'),
         ('sa', 'salinity'),
         ('am', 'ammonia'),
+        ('na', 'nitrate'),
+        ('ni', 'nitrite'),
     ]
     type = models.IntegerField(choices=types)  # needs testing
     value = models.DecimalField(max_digits=7, decimal_places=3)  # actual recorded number
@@ -66,17 +68,23 @@ class LogData(models.Model):
 class Parameters(models.Model):
     tank = models.OneToOneField(Tank, on_delete=models.CASCADE)  # one to one
     # unit: fahrenheit
-    temp_max = models.DecimalField(max_digits=7, decimal_places=3)
-    temp_min = models.DecimalField(max_digits=7, decimal_places=3)
-    # unit: ph
-    ph_max = models.DecimalField(max_digits=7, decimal_places=3)
-    ph_min = models.DecimalField(max_digits=7, decimal_places=3)
+    temp_max = models.DecimalField(max_digits=3, decimal_places=2)
+    temp_min = models.DecimalField(max_digits=3, decimal_places=2)
+    # PH unit: ph
+    ph_max = models.DecimalField(max_digits=2, decimal_places=2)
+    ph_min = models.DecimalField(max_digits=2, decimal_places=2)
     # unit: specific gravity (relative density to water, 2.0 = twice the density of water)
-    salinity_max = models.DecimalField(max_digits=7, decimal_places=3)
-    salinity_min = models.DecimalField(max_digits=7, decimal_places=3)
-    # unit: ppm (parts per million)
-    ammonia_max = models.DecimalField(max_digits=7, decimal_places=3)
-    ammonia_min = models.DecimalField(max_digits=7, decimal_places=3)
+    salinity_max = models.DecimalField(max_digits=1, decimal_places=3)
+    salinity_min = models.DecimalField(max_digits=1, decimal_places=3)
+    # ammonia measured in unit: ppm (parts per million)
+    ammonia_max = models.DecimalField(max_digits=4, decimal_places=2)
+    ammonia_min = models.DecimalField(max_digits=4, decimal_places=2)
+    # Nitrate measured in unit: ppm (parts per million)(default safe range is 0 - 30 ppm )
+    nitrate_max = models.DecimalField(max_digits=4, decimal_places=2)
+    nitrate_min = models.DecimalField(max_digits=4, decimal_places=2)
+    # Nitrite measured in unit: ppm (parts per million)(default safe range is 0 - 30 ppm )
+    nitrite_max = models.DecimalField(max_digits=4, decimal_places=2)
+    nitrite_min = models.DecimalField(max_digits=4, decimal_places=2)
     # todo more parameters
 
     def get_dict_of_tuples(self):
@@ -85,6 +93,8 @@ class Parameters(models.Model):
             "ph": [self.ph_min, self.ph_max],
             "salinity": [self.salinity_min, self.salinity_max],
             "ammonia": [self.ammonia_min, self.ammonia_max],
+            "nitrate": [self.nitrate_min, self.nitrate_max],
+            "nitrite": [self.nitrite_min, self.nitrite_max],
         }
         return param_dict
 
@@ -101,6 +111,10 @@ class Parameters(models.Model):
             self.salinity_max = param_dict.get('salinity')[1]
             self.ammonia_min = param_dict.get('ammonia')[0]
             self.ammonia_max = param_dict.get('ammonia')[1]
+            self.nitrate_min = param_dict.get('nitrate')[0]
+            self.nitrate_max = param_dict.get('nitrate')[1]
+            self.nitrite_min = param_dict.get('nitrate')[0]
+            self.nitrite_max = param_dict.get('nitrate')[1]
 
     def __str__(self):
         return 'Tank %s Parameters' % (self.tank.pk)
