@@ -68,14 +68,14 @@ class LogData(models.Model):
 class Parameters(models.Model):
     tank = models.OneToOneField(Tank, on_delete=models.CASCADE)  # one to one
     # unit: fahrenheit
-    temp_max = models.DecimalField(max_digits=3, decimal_places=2)
-    temp_min = models.DecimalField(max_digits=3, decimal_places=2)
+    temp_max = models.DecimalField(max_digits=4, decimal_places=2)
+    temp_min = models.DecimalField(max_digits=4, decimal_places=2)
     # PH unit: ph
-    ph_max = models.DecimalField(max_digits=2, decimal_places=2)
-    ph_min = models.DecimalField(max_digits=2, decimal_places=2)
+    ph_max = models.DecimalField(max_digits=4, decimal_places=2)
+    ph_min = models.DecimalField(max_digits=4, decimal_places=2)
     # unit: specific gravity (relative density to water, 2.0 = twice the density of water)
-    salinity_max = models.DecimalField(max_digits=1, decimal_places=3)
-    salinity_min = models.DecimalField(max_digits=1, decimal_places=3)
+    salinity_max = models.DecimalField(max_digits=5, decimal_places=3)
+    salinity_min = models.DecimalField(max_digits=5, decimal_places=3)
     # ammonia measured in unit: ppm (parts per million)
     ammonia_max = models.DecimalField(max_digits=4, decimal_places=2)
     ammonia_min = models.DecimalField(max_digits=4, decimal_places=2)
