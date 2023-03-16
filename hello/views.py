@@ -54,13 +54,17 @@ class home(View):
   def get(self, request):
     tanks = Tank.objects.filter(user=request.user)
     #sensors = Sensor.objects.filter(user=request.user)
-    #return render(request,'hello/home.html', {"tanks": tanks, "sensors": sensors})
+    return render(request,'hello/home.html', {"tanks": tanks})
 
 class profile(View):
   def get(self, request):
     user = request.user
     tNum = str(len(Tank.objects.filter(user=user)))
     return render(request,'hello/profile.html', {"name": user.first_name + " " + user.last_name, "email": user.email, "tanks": tNum})
+
+class tankHome(View):
+  def get(self, request):
+    return render(request,'hello/tankhome.html')
 
 class aboutUs(View):
   def get(self, request):
