@@ -4,10 +4,6 @@
     <head>
         <meta charset="utf-8" />
         <link rel="stylesheet" href="{% static 'css/home.css' %}"/>
-        <script
-            src="https://code.jquery.com/jquery-3.6.0.js"
-            integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
-            crossorigin="anonymous"></script>
         <title>Home Page</title>
     </head>
     <header>
@@ -16,6 +12,7 @@
             <div style="float: right; padding-right: 15px;">
                 <a href="/aboutus/">about us</a>
                 <a href="/profile/">profile</a>
+                <a href="/addtank/">add tank</a>
             </div>
         </nav>
     </header>   
@@ -61,37 +58,7 @@
             <div id="tanks" class="section" style="grid-row: 2; margin-top: -40px;">
                 <h2 style="margin-top: -50px;">your tanks:</h2>
                 <a href="/tankhome/">example tank screen</a>
-                <div id="tank-container" style="display: flex; flex-wrap:wrap;">
-                    <div id= "tank-form" class="tank-box" style="margin-left: 20px;">
-                        <form method="post" action="/tankmanage/">
-                            {% csrf_token %}
-                            {% if messages %}
-                                {% for message in messages %}
-                                <div class="form-group">
-                                    <p class="{{ message.tags }}">{{ message }}</p>
-                                </div>
-                                {% endfor %}
-                            {% endif %}
-                            <div class="form-group">
-                                <input type="text" class="form-control" id="tname" name="tname" placeholder="tank name" style="margin-bottom: 10px; margin-top: 10px;" required/>
-                            </div>
-                            <div class="form-group">
-                                <select class="form-select" id="sensor" name="sensor" style="margin-bottom: 10px;">
-                                <option value="none">none</option>
-                                <optgroup label="sensors">
-                                {% for sensor in sensors %}
-                                    <option value="{{ sensor.id }}">{{ sensor.sname }}</option>
-                                {% endfor %}
-                                </select>
-                            </div>
-                            <div class="form-group d-flex justify-content-between">
-                                <button class="btn btn-primary" type="submit">add new tank</button>
-                            </div>
-                        </form>
-                     </div>
-                </div> 
             </div>
-        </div> 
-    <script src="{% static 'js/home.js' %}"></script> 
+        </div>
     </body>    
 </html>
