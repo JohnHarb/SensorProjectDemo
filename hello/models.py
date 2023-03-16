@@ -89,7 +89,7 @@ class Parameters(models.Model):
         return param_dict
 
     # intended to get w/ helper, change, then set w/ helper
-    def set_dict_of_tuples(self, param_dict: dict[str, list[float, float]]):
+    def set_dict_of_tuples(self, param_dict: 'dict[str, list[float, float]]'):
         if list(param_dict.keys()) != list(self.get_dict_of_tuples().keys()):
             raise ValueError("The dict must match keys and types with get_dict_of_tuples()")
         else:

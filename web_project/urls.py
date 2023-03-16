@@ -23,8 +23,9 @@ urlpatterns = [
     path("signin/", views.signIn.as_view()),
     path("home/", views.home.as_view()),
     path("profile/", views.profile.as_view()),
+    path("tankhome/", views.tankHome.as_view()),
     path("aboutus/", views.aboutUs.as_view()),
     path("signout/", views.signOut.as_view()),
-    path("tankmanage/", views.tankManage.as_view()),
+    #path("tankmanage/", views.tankManage.as_view()),
 ]
 

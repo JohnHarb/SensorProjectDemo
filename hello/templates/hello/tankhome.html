@@ -1,0 +1,38 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <link rel="stylesheet" href="{% static 'css/info.css' %}"/>
+        <title>TankHome</title>
+    </head>
+    <header>
+        <nav>
+            <a href="/home/" style="padding-left: 15px;">snsr</a>
+            <div style="float: right; padding-right: 15px;">
+                <a href="/aboutus/">about us</a>
+                <a href="/profile/">profile</a>
+            </div>
+        </nav>
+    </header>   
+    <body>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 mx-auto my-5">
+                    <h1 style="margin-top:185px;">tank name</h1> 
+                    <div class="supersection">
+                        <div class="section">
+                            <p>stats</p>
+                        </div>
+                        <div class="section">
+                            <p>more stats</p>
+                        </div>
+                        <div class="section">
+                            <a href="/signout/" style="color: black;">delete tank</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>   
+    </body>
+</html>
