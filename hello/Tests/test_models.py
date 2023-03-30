@@ -86,7 +86,7 @@ class ParametersModelTest(TestCase):
                                   salinity_min=0.995, salinity_max=1.000,
                                   ammonia_min=0, ammonia_max=0)
 
-    def test_parameter_dict_of_tuples(self):
+    def test_parameter_dict_of_range(self):
         param = Parameters.objects.get(id=1)
 
         invalid_dict = {
@@ -94,11 +94,11 @@ class ParametersModelTest(TestCase):
             "notsalinity": (1.2, 5.2)
         }
         with self.assertRaises(ValueError):
-            param.set_dict_of_tuples(invalid_dict)
+            param.set_dict_of_range(invalid_dict)
 
-        original_dict = param.get_dict_of_tuples()
+        original_dict = param.get_dict_of_range()
         original_dict.get("temp")[0] = 70
-        param.set_dict_of_tuples(original_dict)
+        param.set_dict_of_range(original_dict)
         param.save()
         self.assertEqual(param.temp_min, 70)
 

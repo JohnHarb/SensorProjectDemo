@@ -1,9 +1,20 @@
+import datetime
+
 from django.db import models
 from django.contrib.auth.models import User
 from phonenumber_field.modelfields import PhoneNumberField  # library for verifying phonenums, including international
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.core.mail import send_mail
 
+
+# send_mail(
+#     'Subject here',
+#     'Here is the message.',
+#     'from@example.com',
+#     ['to@example.com'],
+#     fail_silently=False,
+# )
 
 
 # todo tank & general notification class(es)
@@ -11,6 +22,8 @@ class Profile(models.Model):  # for additional fields attached to User
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     # username, password, email, first_name, last_name included in User
     phone_num = PhoneNumberField(blank=True)
+    email_notifications = models.BooleanField(default=True)
+    phone_notifications = models.BooleanField(default=False)
 
     # one to many relationship to Tank model
     def __str__(self):
@@ -32,7 +45,7 @@ class Tank(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)  # many to one\
 
     # required, but optional to user, will use generated name if they don't enter one
-    name = models.CharField( max_length=20)
+    name = models.CharField(max_length=20)
     types = [
         ('Fr', 'Freshwater'),
         ('Sa', 'Saltwater'),
@@ -41,6 +54,9 @@ class Tank(models.Model):
     type = models.CharField(max_length=2, choices=types)
     volume = models.IntegerField()
     module_id = models.CharField(max_length=10, blank=True)
+    send_notifications = models.BooleanField(default=True)
+    last_notification_time = models.DateTimeField(blank=True)
+
     # one to one relationship to parameters model
 
     def __str__(self):
@@ -55,12 +71,39 @@ class LogData(models.Model):
         ('sa', 'salinity'),
         ('am', 'ammonia'),
     ]
-    type = models.IntegerField(choices=types)  # needs testing
+    type = models.IntegerField(choices=types)
     value = models.DecimalField(max_digits=7, decimal_places=3)  # actual recorded number
     time_stamp = models.DateTimeField()  # should come from user input or Rpi
+    is_manual = models.BooleanField(default=False)
+
 
     def __str__(self):
         return 'Tank %s data: %s, %s, %s' % (self.tank.pk, self.type, self.value, self.time_stamp.isoformat())
+
+# 1 notification per day per tank
+@receiver(post_save, sender=LogData)  # uses signals to check new data when its model is created.
+def check_log_data(sender, instance: LogData, created, **kwargs):
+    if created:
+        data = instance
+        param_range = data.tank.parameters.get_dict_of_range().get(data.types[data.type][1])
+        profile = data.tank.user.profile
+        today = datetime.date.today().isoformat()
+        last_notification = data.tank.last_notification_time.date().isoformat()
+        tank_notifications = data.tank.send_notifications and (not data.is_manual) and last_notification != today
+        if tank_notifications and (data.value < param_range[0] or data.value > param_range[1]): # value is out of bounds
+            if profile.email_notifications:
+                subject = "AquaWatch: tank, %s, has a parameter out of expected range", data.tank.name
+                send_mail(
+                    subject,
+                    'Here is the message.',
+                    'from@example.com',
+                    [data.tank.user.email],
+                    fail_silently=False,
+                )
+            if profile.phone_notifications:
+                pass
+
+
 
 
 class Parameters(models.Model):
@@ -77,9 +120,10 @@ class Parameters(models.Model):
     # unit: ppm (parts per million)
     ammonia_max = models.DecimalField(max_digits=7, decimal_places=3)
     ammonia_min = models.DecimalField(max_digits=7, decimal_places=3)
+
     # todo more parameters
 
-    def get_dict_of_tuples(self):
+    def get_dict_of_range(self):
         param_dict = {  # "type": [type_min, type_max] format
             "temp": [self.temp_min, self.temp_max],
             "ph": [self.ph_min, self.ph_max],
@@ -89,9 +133,9 @@ class Parameters(models.Model):
         return param_dict
 
     # intended to get w/ helper, change, then set w/ helper
-    def set_dict_of_tuples(self, param_dict: dict[str, list[float, float]]):
-        if list(param_dict.keys()) != list(self.get_dict_of_tuples().keys()):
-            raise ValueError("The dict must match keys and types with get_dict_of_tuples()")
+    def set_dict_of_range(self, param_dict: dict[str, list[float, float]]):
+        if list(param_dict.keys()) != list(self.get_dict_of_range().keys()):
+            raise ValueError("The dict must match keys and types with get_dict_of_range()")
         else:
             self.temp_min = param_dict.get('temp')[0]
             self.temp_max = param_dict.get('temp')[1]
@@ -104,4 +148,3 @@ class Parameters(models.Model):
 
     def __str__(self):
         return 'Tank %s Parameters' % (self.tank.pk)
-
