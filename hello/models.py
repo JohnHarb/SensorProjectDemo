@@ -136,6 +136,7 @@ class Parameters(models.Model):
     def set_dict_of_range(self, param_dict: dict[str, list[float, float]]):
         if list(param_dict.keys()) != list(self.get_dict_of_range().keys()):
             raise ValueError("The dict must match keys and types with get_dict_of_range()")
+
         else:
             self.temp_min = param_dict.get('temp')[0]
             self.temp_max = param_dict.get('temp')[1]
