@@ -1,0 +1,88 @@
+/* Center the form on the page */
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    border: 1px solid #3b4e3b; /* Add a thin border around the entire container */
+}
+
+/* Style the header */
+h1{
+    float: left; /* Move the form to the right */
+    text-align: center;
+    margin-right: 50px; /* Add space between the header and form */
+    font-family: 'DejaVu Sans Mono', monospace;
+}
+
+/* Style the form */
+form {
+    float: right; /* Move the form to the right */
+    text-align: center;
+    margin: 50px 0; /* Add more space between header and form */
+    align-items: center; /* Align the form to the center */
+
+}
+
+/* Style the text boxes */
+input[type="text"]{
+    width: 100%; /* Make the text boxes bigger */
+    border-radius: 25px;
+    padding: 20px; /* Increase the padding for the text boxes */
+    margin-bottom: 30px; /* Add more space between text boxes */
+    background-color: #DAE5CC; /* Change to a seaweed/earth tone color */
+    font-family: 'DejaVu Sans Mono', monospace; /* Use the DejaVu Sans Mono font */
+}
+
+input[type="checkbox"] {
+    font-family: 'DejaVu Sans Mono', monospace;
+    margin-bottom: 30px; /* Add more space between text boxes */
+}
+
+select {
+    width: 120%;
+    border-radius: 25px;
+    padding: 20px;
+    margin-bottom: 30px;
+    background-color: #DAE5CC;
+    font-family: 'DejaVu Sans Mono', monospace;
+}
+
+/* Style the submit button */
+.btn-primary {
+    background-color: #6d9c6d; /* Change to a seaweed/earth tone color */
+    color: white;
+    border-radius: 25px;
+    padding: 15px 30px; /* Increase the padding for the submit button */
+    font-family: 'DejaVu Sans Mono', monospace; /* Use the DejaVu Sans Mono font */
+}
+
+/* Style the already have account link */
+a {
+    text-align: center;
+    font-size: 14px;
+    color: #6d9c6d; /* Change to a seaweed/earth tone color */
+    margin-top: 30px; /* Add more space between link and form */
+    font-family: 'DejaVu Sans Mono', monospace; /* Use the DejaVu Sans Mono font */
+    align-items: center; /* Align the link to the center */
+}
+
+header {
+    background-color: #6d9c6d; /* Same color as the create account button */
+    color: white;
+    font-size: 50px; /* Bigger font size */
+    height: 60px; /* Bigger height */
+    justify-content: space-between; /* Add space between elements */
+}
+
+/* Style the links in the header */
+header a, header div a {
+    color: white;
+}
+
+.error{
+    color: red !important;
+    font-size: 14px;
+    font-family: 'DejaVu Sans Mono', monospace;
+    margin-bottom: 30px;
+}
