@@ -70,6 +70,26 @@ class addTank(View):
   def get(self, request):
     return render(request,'hello/addtank.html')
 
+  def post(self, request):
+    user = request.user
+    tname = request.POST["tname"]
+    ttype = request.POST["ttype"]
+    volume = request.POST["wcap"]
+    module_id = request.POST["mID"]
+    if Tank.objects.filter(module_id=module_id).exists():
+      messages.error(request, 'The module: %s, is connected to an existing tank' % module_id)
+      return render(request, 'hello/addtank.html')
+
+    notifications = "notif" in request.POST
+    # didn't merge new model fields for notifications into main yet
+    # add to the next line when merged: send_notifications=notifications
+    new_tank = Tank.objects.create(user=user, name=tname, type=ttype, volume=volume, module_id=module_id)
+    new_tank.save()
+    print("new tank saved")
+
+
+    return redirect('/home/')
+
 class aboutUs(View):
   def get(self, request):
    return render(request,'hello/aboutus.html')
