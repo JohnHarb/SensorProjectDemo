@@ -66,6 +66,30 @@ class tankHome(View):
   def get(self, request):
     return render(request,'hello/tankhome.html')
 
+class addTank(View):
+  def get(self, request):
+    return render(request,'hello/addtank.html')
+
+  def post(self, request):
+    user = request.user
+    tname = request.POST["tname"]
+    ttype = request.POST["ttype"]
+    volume = request.POST["wcap"]
+    module_id = request.POST["mID"]
+    if Tank.objects.filter(module_id=module_id).exists():
+      messages.error(request, 'The module: %s, is connected to an existing tank' % module_id)
+      return render(request, 'hello/addtank.html')
+
+    notifications = "notif" in request.POST
+    # didn't merge new model fields for notifications into main yet
+    # add to the next line when merged: send_notifications=notifications
+    new_tank = Tank.objects.create(user=user, name=tname, type=ttype, volume=volume, module_id=module_id)
+    new_tank.save()
+    print("new tank saved")
+
+
+    return redirect('/home/')
+
 class aboutUs(View):
   def get(self, request):
    return render(request,'hello/aboutus.html')
@@ -74,25 +98,3 @@ class signOut(View):
   def get(self, request):
     logout(request)
     return redirect('/signin/')
-"""
-class tankManage(View):
-  def get(self, request):
-    tanks = Tank.objects.filter(user=request.user).values()
-    return JsonResponse(json.dumps(list(tanks)), safe=False)
-
-  def post(self, request):
-    tname = request.POST["tname"]
-    sensor = request.POST["sensor"]
-    if len(Tank.objects.filter(user = request.user, tname = tname)) == 1:
-      messages.error(request, "tank exists already")
-      return redirect('/home/')
-    if sensor != 'none':
-      sensorToAdd = Sensor.objects.filter(id=sensor)[0]
-      if len(Tank.objects.filter(user = request.user, sensor=sensorToAdd)) == 1:
-        messages.error(request, "sensor assigned already")
-        return redirect('/home/')
-      newTank = Tank(tname=tname, user=request.user, sensor=sensorToAdd)
-    else:
-      newTank = Tank(tname=tname, user=request.user)
-    newTank.save()
-    return redirect('/home/')"""
