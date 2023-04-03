@@ -72,7 +72,7 @@ class addTank(View):
 
   def post(self, request):
     user = request.user
-    tname = str. request.POST["tname"]
+    tname = request.POST["tname"]
     ttype = request.POST["ttype"]
     volume = request.POST["wcap"]
     module_id = request.POST["mID"]
