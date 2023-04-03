@@ -21,7 +21,7 @@ from django.core.mail import send_mail
 class Profile(models.Model):  # for additional fields attached to User
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     # username, password, email, first_name, last_name included in User
-    phone_num = PhoneNumberField(blank=True)
+    phone_num = PhoneNumberField(blank=True, null=True)
     email_notifications = models.BooleanField(default=True)
     phone_notifications = models.BooleanField(default=False)
 
@@ -38,7 +38,8 @@ def create_user_profile(sender, instance, created, **kwargs):
 
 @receiver(post_save, sender=User)  # uses signals to save profile when its User is saved
 def save_user_profile(sender, instance, **kwargs):
-    instance.profile.save()  # not sure if p should be capital, needs testing
+    profile = Profile.objects.get(user=instance)
+    profile.save()
 
 
 class Tank(models.Model):
@@ -55,7 +56,7 @@ class Tank(models.Model):
     volume = models.IntegerField()
     module_id = models.CharField(max_length=10, blank=True)
     send_notifications = models.BooleanField(default=True)
-    last_notification_time = models.DateTimeField(blank=True)
+    last_notification_time = models.DateTimeField(blank=True, null=True)
 
     # one to one relationship to parameters model
 
@@ -88,7 +89,9 @@ def check_log_data(sender, instance: LogData, created, **kwargs):
         param_range = data.tank.parameters.get_dict_of_range().get(data.types[data.type][1])
         profile = data.tank.user.profile
         today = datetime.date.today().isoformat()
-        last_notification = data.tank.last_notification_time.date().isoformat()
+        last_notification = data.tank.last_notification_time
+        if last_notification != None:
+            last_notification = last_notification.date().isoformat()
         tank_notifications = data.tank.send_notifications and (not data.is_manual) and last_notification != today
         if tank_notifications and (data.value < param_range[0] or data.value > param_range[1]): # value is out of bounds
             if profile.email_notifications:
@@ -125,23 +128,24 @@ class Parameters(models.Model):
     # todo more parameters
 
     freshwater_dict = {  # "type": [type_min, type_max] format
-        "temp": [72, 82],
+        "temp": [72.0, 82.0],
         "ph": [6.5, 7.5],
         "salinity": [.997, 1.03],
         "ammonia": [0.0, 0.0],
     }
     saltwater_dict = {  # "type": [type_min, type_max] format
-        "temp": [72, 78],
+        "temp": [72.0, 78.0],
         "ph": [8.1, 8.4],
         "salinity": [1.020, 1.025],
         "ammonia": [0.0, 0.0],
     }
+
     def get_dict_of_range(self):
         param_dict = {  # "type": [type_min, type_max] format
-            "temp": [self.temp_min, self.temp_max],
-            "ph": [self.ph_min, self.ph_max],
-            "salinity": [self.salinity_min, self.salinity_max],
-            "ammonia": [self.ammonia_min, self.ammonia_max],
+            "temp": [self.temp_min.__float__(), self.temp_max.__float__()],
+            "ph": [self.ph_min.__float__(), self.ph_max.__float__()],
+            "salinity": [self.salinity_min.__float__(), self.salinity_max.__float__()],
+            "ammonia": [self.ammonia_min.__float__(), self.ammonia_max.__float__()],
         }
         return param_dict
 
@@ -162,17 +166,17 @@ class Parameters(models.Model):
     def __str__(self):
         return 'Tank %s Parameters' % (self.tank.pk)
 
-@receiver(post_save, sender=Tank)  # uses signals to create connected profile when a User is created
-def create_user_profile(sender, instance, created, **kwargs):
-
+@receiver(post_save, sender=Tank)  # uses signals to create connected param when a tank is created
+def create_tank_params(sender, instance, created, **kwargs):
     if created:
         new_param = Parameters.objects.create(tank=instance)
-        if new_param.tank.type == 0:
+        if new_param.tank.type == "Fr":
             new_param.set_dict_of_range(Parameters.freshwater_dict)
-        elif new_param.tank.type == 1:
+        elif new_param.tank.type == "Sa":
             new_param.set_dict_of_range(Parameters.saltwater_dict)
         new_param.save()
 
 @receiver(post_save, sender=Tank)
-def save_user_profile(sender, instance, **kwargs):
-    instance.parameters.save()  # test
+def save_rank_params(sender, instance, **kwargs):
+    param = Parameters.objects.get(tank=instance)
+    param.save()
