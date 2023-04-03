@@ -92,6 +92,7 @@ def check_log_data(sender, instance: LogData, created, **kwargs):
         tank_notifications = data.tank.send_notifications and (not data.is_manual) and last_notification != today
         if tank_notifications and (data.value < param_range[0] or data.value > param_range[1]): # value is out of bounds
             if profile.email_notifications:
+                print("when email should be sent")
                 subject = "AquaWatch: tank, %s, has a parameter out of expected range", data.tank.name
                 send_mail(
                     subject,
@@ -101,7 +102,7 @@ def check_log_data(sender, instance: LogData, created, **kwargs):
                     fail_silently=False,
                 )
             if profile.phone_notifications:
-                pass
+                print("when text should be sent")
 
 
 
@@ -109,20 +110,32 @@ def check_log_data(sender, instance: LogData, created, **kwargs):
 class Parameters(models.Model):
     tank = models.OneToOneField(Tank, on_delete=models.CASCADE)  # one to one
     # unit: fahrenheit
-    temp_max = models.DecimalField(max_digits=7, decimal_places=3)
-    temp_min = models.DecimalField(max_digits=7, decimal_places=3)
+    temp_max = models.DecimalField(max_digits=7, decimal_places=3, default=0.0)
+    temp_min = models.DecimalField(max_digits=7, decimal_places=3, default=0.0)
     # unit: ph
-    ph_max = models.DecimalField(max_digits=7, decimal_places=3)
-    ph_min = models.DecimalField(max_digits=7, decimal_places=3)
+    ph_max = models.DecimalField(max_digits=7, decimal_places=3, default=0.0)
+    ph_min = models.DecimalField(max_digits=7, decimal_places=3, default=0.0)
     # unit: specific gravity (relative density to water, 2.0 = twice the density of water)
-    salinity_max = models.DecimalField(max_digits=7, decimal_places=3)
-    salinity_min = models.DecimalField(max_digits=7, decimal_places=3)
+    salinity_max = models.DecimalField(max_digits=7, decimal_places=3, default=0.0)
+    salinity_min = models.DecimalField(max_digits=7, decimal_places=3, default=0.0)
     # unit: ppm (parts per million)
-    ammonia_max = models.DecimalField(max_digits=7, decimal_places=3)
-    ammonia_min = models.DecimalField(max_digits=7, decimal_places=3)
+    ammonia_max = models.DecimalField(max_digits=7, decimal_places=3, default=0.0)
+    ammonia_min = models.DecimalField(max_digits=7, decimal_places=3, default=0.0)
 
     # todo more parameters
 
+    freshwater_dict = {  # "type": [type_min, type_max] format
+        "temp": [72, 82],
+        "ph": [6.5, 7.5],
+        "salinity": [.997, 1.03],
+        "ammonia": [0.0, 0.0],
+    }
+    saltwater_dict = {  # "type": [type_min, type_max] format
+        "temp": [72, 78],
+        "ph": [8.1, 8.4],
+        "salinity": [1.020, 1.025],
+        "ammonia": [0.0, 0.0],
+    }
     def get_dict_of_range(self):
         param_dict = {  # "type": [type_min, type_max] format
             "temp": [self.temp_min, self.temp_max],
@@ -148,3 +161,18 @@ class Parameters(models.Model):
 
     def __str__(self):
         return 'Tank %s Parameters' % (self.tank.pk)
+
+@receiver(post_save, sender=Tank)  # uses signals to create connected profile when a User is created
+def create_user_profile(sender, instance, created, **kwargs):
+
+    if created:
+        new_param = Parameters.objects.create(tank=instance)
+        if new_param.tank.type == 0:
+            new_param.set_dict_of_range(Parameters.freshwater_dict)
+        elif new_param.tank.type == 1:
+            new_param.set_dict_of_range(Parameters.saltwater_dict)
+        new_param.save()
+
+@receiver(post_save, sender=Tank)
+def save_user_profile(sender, instance, **kwargs):
+    instance.parameters.save()  # test
