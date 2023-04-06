@@ -27,6 +27,7 @@ urlpatterns = [
     path("addtank/", views.addTank.as_view()),
     path("aboutus/", views.aboutUs.as_view()),
     path("signout/", views.signOut.as_view()),
+    path('tankparams/<int:tank_id>/', views.tankParams.as_view(), name='tank_params'), 
     #path("tankmanage/", views.tankManage.as_view()),
 ]
 

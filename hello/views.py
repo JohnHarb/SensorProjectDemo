@@ -96,3 +96,29 @@ class signOut(View):
   def get(self, request):
     logout(request)
     return redirect('/signin/')
+  
+from django.shortcuts import render, get_object_or_404
+from django.views import View
+from .models import Tank, Parameters
+
+from django.shortcuts import get_object_or_404
+from .models import Tank, Parameters
+
+class tankParams(View):
+    def get(self, request, tank_id):
+        tank = get_object_or_404(Tank, id=tank_id)
+        parameters = tank.parameters  # Assuming the related name is 'parameters'
+        parameter_list = [
+            {'name': 'temp', 'label': 'Temperature'},
+            {'name': 'ph', 'label': 'pH'},
+            {'name': 'salinity', 'label': 'Salinity'},
+            {'name': 'ammonia', 'label': 'Ammonia'},
+        ]
+
+        context = {
+            'tank': tank,
+            'parameters': parameters,
+            'parameter_list': parameter_list,
+        }
+        return render(request, 'hello/tankparams.html', context)
+
