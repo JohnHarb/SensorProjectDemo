@@ -70,6 +70,24 @@ class addTank(View):
   def get(self, request):
     return render(request,'hello/addtank.html')
 
+  def post(self, request):
+    user = request.user
+    tname = request.POST["tname"]
+    ttype = request.POST["ttype"]
+    volume = request.POST["wcap"]
+    module_id = request.POST["mID"]
+    if Tank.objects.filter(module_id=module_id).exists():
+      messages.error(request, 'The module: %s, is connected to an existing tank' % module_id)
+      return render(request, 'hello/addtank.html')
+    notifications = "notif" in request.POST
+
+    new_tank = Tank.objects.create(user=user, name=tname, type=ttype, volume=volume, module_id=module_id, send_notifications=notifications)
+    new_tank.save()
+    print("new tank saved")
+
+
+    return redirect('/home/')
+
 class aboutUs(View):
   def get(self, request):
    return render(request,'hello/aboutus.html')
@@ -78,3 +96,29 @@ class signOut(View):
   def get(self, request):
     logout(request)
     return redirect('/signin/')
+  
+from django.shortcuts import render, get_object_or_404
+from django.views import View
+from .models import Tank, Parameters
+
+from django.shortcuts import get_object_or_404
+from .models import Tank, Parameters
+
+class tankParams(View):
+    def get(self, request, tank_id):
+        tank = get_object_or_404(Tank, id=tank_id)
+        parameters = tank.parameters  # Assuming the related name is 'parameters'
+        parameter_list = [
+            {'name': 'temp', 'label': 'Temperature'},
+            {'name': 'ph', 'label': 'pH'},
+            {'name': 'salinity', 'label': 'Salinity'},
+            {'name': 'ammonia', 'label': 'Ammonia'},
+        ]
+
+        context = {
+            'tank': tank,
+            'parameters': parameters,
+            'parameter_list': parameter_list,
+        }
+        return render(request, 'hello/tankparams.html', context)
+

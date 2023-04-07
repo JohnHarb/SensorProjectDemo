@@ -15,19 +15,21 @@ class UserProfileModelTest(TestCase):
         password = "1jhd91hd91"
         User.objects.create(username=email, email=email, first_name=f_name, last_name=l_name, password=password)
 
+
     def test_profile_creation(self):
         user = User.objects.get(id=1)
-        user.save()
         self.assertEqual(Profile.objects.get(user=user).user.pk, 1)
 
     def test_profile_update(self):
         user = User.objects.get(id=1)
-        user.pk = 3
         email = "goodbye@gmail.com"
         user.email = email
         user.username = email
         user.save()
-        self.assertEqual(Profile.objects.get(user=user).user.pk, 3)
+        profile = Profile.objects.get(user=user)
+        profile.phone_num = "4145553434"
+        profile.save()
+        self.assertEqual(Profile.objects.get(user=user).phone_num, "4145553434")
 
 
     def test__str__(self):
@@ -45,7 +47,22 @@ class TankModelTest(TestCase):
         l_name = "Smith"
         password = "1jhd91hd91"
         user = User.objects.create(username=email, email=email, first_name=f_name, last_name=l_name, password=password)
-        Tank.objects.create(user=user, name="Office Tank", type="Fr", volume=50)
+        tank = Tank.objects.create(user=user, name="Office Tank", type="Fr", volume=50)
+
+    def test_param_creation(self):
+        fresh_param = Parameters.objects.get(tank=Tank.objects.get(name="Office Tank"))
+
+        self.assertEqual(fresh_param.get_dict_of_range(), Parameters.freshwater_dict)
+        Tank.objects.create(user=User.objects.get(pk=1), name="Other Tank", type="Sa", volume=50)
+        salt_param = Parameters.objects.get(tank=2)
+        self.assertEqual(salt_param.get_dict_of_range(), Parameters.saltwater_dict)
+
+    def test_param_save(self):
+        new_param = Parameters.objects.get(tank=1)
+        new_param.ph_max = 12.3
+        new_tank = Tank.objects.get(pk=1)
+        self.assertEqual(new_param.ph_max, 12.3)
+
 
     def test__str__(self):
         tank = Tank.objects.get(id=1)
@@ -80,13 +97,9 @@ class ParametersModelTest(TestCase):
         password = "1jhd91hd91"
         user = User.objects.create(username=email, email=email, first_name=f_name, last_name=l_name, password=password)
         tank = Tank.objects.create(user=user, name="Office Tank", type="Fr", volume=50)
-        Parameters.objects.create(tank=tank,
-                                  temp_min=75, temp_max=82,
-                                  ph_min=7.43, ph_max=8.29,
-                                  salinity_min=0.995, salinity_max=1.000,
-                                  ammonia_min=0, ammonia_max=0)
 
-    def test_parameter_dict_of_tuples(self):
+
+    def test_parameter_dict_of_range(self):
         param = Parameters.objects.get(id=1)
 
         invalid_dict = {
@@ -94,11 +107,11 @@ class ParametersModelTest(TestCase):
             "notsalinity": (1.2, 5.2)
         }
         with self.assertRaises(ValueError):
-            param.set_dict_of_tuples(invalid_dict)
+            param.set_dict_of_range(invalid_dict)
 
-        original_dict = param.get_dict_of_tuples()
+        original_dict = param.get_dict_of_range()
         original_dict.get("temp")[0] = 70
-        param.set_dict_of_tuples(original_dict)
+        param.set_dict_of_range(original_dict)
         param.save()
         self.assertEqual(param.temp_min, 70)
 
