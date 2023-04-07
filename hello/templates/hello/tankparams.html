@@ -5,6 +5,16 @@
         <meta charset="utf-8" />
         <link rel="stylesheet" href="{% static 'css/tankparams.css' %}"/>
         <title>Tank Parameters</title>
+        <script>
+            function toggleInput(parameter) {
+                const minInput = document.getElementById(`${parameter}-min`);
+                const maxInput = document.getElementById(`${parameter}-max`);
+                const checkbox = document.getElementById(`${parameter}-checkbox`);
+
+                minInput.disabled = !checkbox.checked;
+                maxInput.disabled = !checkbox.checked;
+            }
+        </script>
     </head>
     <header>
         <nav>
@@ -18,8 +28,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-6 mx-auto my-5">
-                    <h1 style="margin-top:185px;">Tank Parameters</h1> 
-                    <h2>Editing parameters for tank: {{ tank.tname }}</h2>
+                    <h1 style="margin-top:185px;">{{ tank.name }} Parameters</h1> 
                     <form method="post" action="/edittank/">
                         {% csrf_token %}
                             {% if messages %}
@@ -29,45 +38,33 @@
                                 </div>
                                 {% endfor %}
                             {% endif %}
-                            <div class="form-group">
-                                <input type="text" class="form-control" id="tname" name="tname" placeholder="tank name" required/>
-                            </div>
-                            <div class="form-group">
-                                <select id="ttype" name="ttype">
-                                    <option value="" selected disabled>type of tank</option>
-                                    <option value="Sa">Saltwater</option>
-                                    <option value="Fr">Freshwater</option>
-                                </select>
-                            </div>
 
-                            <!-- Tank parameters with Enable/Disable checkboxes and Min/Max acceptable values -->
-                            <table class="parameter-table">
+                            <table>
                                 <thead>
                                     <tr>
                                         <th>Parameter</th>
-                                        <th>Enable</th>
-                                        <th>Min Value</th>
-                                        <th>Max Value</th>
+                                        <th>Enable/Disable</th>
+                                        <th>Min acceptable value</th>
+                                        <th>Max acceptable value</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {% for parameter in parameter_list %}
                                     <tr>
-                                        <td>{{ parameter|title }}</td>
+                                        <td>{{ parameter.label |title }}</td>
                                         <td>
-                                            <input type="checkbox" id="{{ parameter|lower|slugify }}-checkbox" name="{{ parameter|lower|slugify }}-checkbox" value="yes">
+                                            <input type="checkbox" id="{{ parameter|lower|slugify }}-checkbox" name="{{ parameter|lower|slugify }}-checkbox" value="yes" onclick="toggleInput('{{ parameter|lower|slugify }}')">
                                         </td>
                                         <td>
-                                            <input type="number" class="form-control" id="{{ parameter|lower|slugify }}-min" name="{{ parameter|lower|slugify }}-min" placeholder="Min" step="0.001" required/>
+                                            <input type="number" class="form-control" id="{{ parameter|lower|slugify }}-min" name="{{ parameter|lower|slugify }}-min" placeholder="Min acceptable value" step="0.001" required disabled/>
                                         </td>
                                         <td>
-                                            <input type="number" class="form-control" id="{{ parameter|lower|slugify }}-max" name="{{ parameter|lower|slugify }}-max" placeholder="Max" step="0.001" required/>
+                                            <input type="number" class="form-control" id="{{ parameter|lower|slugify }}-max" name="{{ parameter|lower|slugify }}-max" placeholder="Max acceptable value" step="0.001" required disabled/>
                                         </td>
                                     </tr>
                                     {% endfor %}
                                 </tbody>
                             </table>
-                            
 
                             <div class="form-group d-flex justify-content-between">
                                 <button class="btn btn-primary" type="submit">Save</button>
