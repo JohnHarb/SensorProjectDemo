@@ -45,6 +45,9 @@ input[type="number"] {
 input[type="checkbox"] {
     font-family: 'DejaVu Sans Mono', monospace;
     margin-bottom: 30px; /* Add more space between text boxes */
+    transform: scale(1.5); /* Make the checkbox bigger */
+    margin-left: 10px; /* Center the checkbox in its column */
+    vertical-align: middle; /* Align the checkbox vertically in the middle */
 }
 
 select {
@@ -114,4 +117,25 @@ header {
 
 .parameter-table input[type="number"] {
     width: 100px;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table, th, td {
+    border: 1px solid #6d9c6d;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+tr:nth-child(odd) {
+    background-color: #ffffff;
 }
