@@ -1,20 +1,12 @@
+{% extends "hello/Nav.html" %}
 {% load static %}
-<!DOCTYPE html>
+{% block content %}
 <html>
     <head>
         <meta charset="utf-8" />
         <link rel="stylesheet" href="{% static 'css/info.css' %}"/>
         <title>TankHome</title>
-    </head>
-    <header>
-        <nav>
-            <a href="/home/" style="padding-left: 15px;">snsr</a>
-            <div style="float: right; padding-right: 15px;">
-                <a href="/aboutus/">about us</a>
-                <a href="/profile/">profile</a>
-            </div>
-        </nav>
-    </header>   
+    </head>  
     <body>
         <div class="container">
             <div class="row">
@@ -36,3 +28,4 @@
         </div>   
     </body>
 </html>
+{%endblock%}

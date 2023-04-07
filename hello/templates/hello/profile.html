@@ -1,20 +1,13 @@
+{% extends "hello/nav.html" %}
 {% load static %}
-<!DOCTYPE html>
+
 <html>
+    {% block content %}
     <head>
         <meta charset="utf-8" />
         <link rel="stylesheet" href="{% static 'css/info.css' %}"/>
         <title>Profile</title>
     </head>
-    <header>
-        <nav>
-            <a href="/home/" style="padding-left: 15px;">snsr</a>
-            <div style="float: right; padding-right: 15px;">
-                <a href="/aboutus/">about us</a>
-                <a href="/profile/">profile</a>
-            </div>
-        </nav>
-    </header>   
     <body>
         <div class="container">
             <div class="row">
@@ -39,3 +32,4 @@
         </div>   
     </body>
 </html>
+{% endblock %}

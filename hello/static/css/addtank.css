@@ -4,7 +4,7 @@
     justify-content: center;
     align-items: center;
     height: 100vh;
-    border: 1px solid #3b4e3b; /* Add a thin border around the entire container */
+    /*border: 1px solid #3b4e3b; Add a thin border around the entire container */
 }
 
 /* Style the header */
