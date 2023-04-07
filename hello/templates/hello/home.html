@@ -1,64 +1,26 @@
+{% extends "hello/nav.html" %}
 {% load static %}
-<!DOCTYPE html>
+{% block content %}
 <html>
     <head>
         <meta charset="utf-8" />
         <link rel="stylesheet" href="{% static 'css/home.css' %}"/>
         <title>Home Page</title>
-    </head>
-    <header>
-        <nav>
-            <a href="/home/" style="padding-left: 15px;">snsr</a>
-            <div style="float: right; padding-right: 15px;">
-                <a href="/aboutus/">about us</a>
-                <a href="/profile/">profile</a>
-                <a href="/addtank/">add tank</a>
-            </div>
-        </nav>
-    </header>   
+    </head>  
     <body>
         <div class="container" style="display:grid; grid-template-rows: 1fr 1fr;">
-            <div id="sensors" class="section" style="grid-row: 1; margin-top: 20px;">
-                <h2>your sensors:</h2>
-                <div id="sensor-container" style="display: flex; flex-wrap:wrap;">
+            <div id="Tanks" class="section" style="grid-row: 1; margin-top: 20px;">
+                <h2>Current Tanks:</h2>
+                <div id="tank-container" style="display: flex; flex-wrap:wrap;">
                     <div class="sensor-box" style="margin-left: 20px;">
-                        <p>Sensor ID: S1</p>
-                        <p>Sensor Name: Temperature Sensor</p>
-                        <p>Tanks: Tank 1, Tank 2</p>
-                    </div>
-                    <div class="sensor-box" style="margin-left: 20px;">
-                        <p>Sensor ID: S2</p>
-                        <p>Sensor Name: pH Sensor</p>
-                        <p>Tanks: Tank 2, Tank 3</p>
-                    </div>
-                    <div class="sensor-box" style="margin-left: 20px;">
-                        <form>
-                            <div class="form-group">
-                                <input type="text" class="form-control" id="sname" name="sname" placeholder="sensor name" required/>
-                            </div>
-                            <div class="form-group">
-                                <input type="text" class="form-control" id="sID" name="sID" placeholder="sensor ID" required/>
-                            </div>
-                            <div class="form-group">
-                                <select class="form-select" id="tank" name="tank">
-                                <option value="none">none</option>
-                                <optgroup label="tanks">
-                                {% for tank in tanks %}
-                                    <option value="{{ tank.id }}">{{ tank.tname }}</option>
-                                {% endfor %}
-                                </select>
-                            </div>
-                            <div class="form-group d-flex justify-content-between">
-                                <button class="btn btn-primary" type="submit">add new sensor</button>
-                            </div>
-                        </form>
+                        <p><a href="/tankhome/"  style ="color:blue; font-size:30px">Life Aquatic</a></p>
+                        <p style ="color:green;">PH: 7.8</p>
+                        <p style ="color:green;">Salinity: 1.023</p>
+                        <p style ="color:red;">Temp: 150</p>
                     </div>
                 </div>
             </div>                        
-            <div id="tanks" class="section" style="grid-row: 2; margin-top: -40px;">
-                <h2 style="margin-top: -50px;">your tanks:</h2>
-                <a href="/tankhome/">example tank screen</a>
-            </div>
         </div> 
     </body>    
 </html>
+{% endblock %}
