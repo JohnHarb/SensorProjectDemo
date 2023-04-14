@@ -7,16 +7,29 @@
         <link rel="stylesheet" href="{% static 'css/home.css' %}"/>
         <title>Home Page</title>
     </head>  
+    <header>
+        <nav>
+            <a href="/home" style="padding-left: 15px;">Home</a>
+            <div style="float: right; padding-right: 15px;">
+                <a href="/aboutus/">Log Out</a>
+            </div>
+        </nav>
+    </header>   
     <body>
         <div class="container" style="display:grid; grid-template-rows: 1fr 1fr;">
             <div id="Tanks" class="section" style="grid-row: 1; margin-top: 20px;">
                 <h2>Current Tanks:</h2>
                 <div id="tank-container" style="display: flex; flex-wrap:wrap;">
+                    {% for tank in tanks %}
                     <div class="sensor-box" style="margin-left: 20px;">
-                        <p><a href="/tankhome/"  style ="color:blue; font-size:30px">Life Aquatic</a></p>
-                        <p style ="color:green;">PH: 7.8</p>
-                        <p style ="color:green;">Salinity: 1.023</p>
-                        <p style ="color:red;">Temp: 150</p>
+                        <p><a href="{% url 'tankhome' tank.id %}" style="color: blue; font-size: 30px">{{ tank.name }}</a></p>
+                        <p style ="color:green;">PH: {{ tank.current_ph }}</p>
+                        <p style ="color:green;">Salinity: {{ tank.current_salinity }}</p>
+                        <p style ="color:red;">Temp: {{ tank.current_temp }}</p>
+                    </div>
+                    {% endfor %}
+                    <div class="sensor-box" style="margin-left: 20px;">
+                        <p><a href="/addtank/" style="color: blue; font-size: 30px">Add new tank</a></p>
                     </div>
                 </div>
             </div>                        

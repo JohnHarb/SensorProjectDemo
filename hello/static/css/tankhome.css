@@ -4,7 +4,7 @@ header {
    
 }
 a{
-    color: black;
+    color: white;
 }
 
 .container {
@@ -75,6 +75,8 @@ a{
 }
 
 .buttons-container .section {
+    color: white;
+    background-color: #6d9c6d;
     margin-right: 10px;
     margin-bottom: 20px;
 }

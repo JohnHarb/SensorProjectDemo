@@ -4,28 +4,95 @@
 <html>
     <head>
         <meta charset="utf-8" />
-        <link rel="stylesheet" href="{% static 'css/info.css' %}"/>
+        <link rel="stylesheet" href="{% static 'css/tankhome.css' %}"/>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
         <title>TankHome</title>
     </head>  
-    <body>
+    <header>
+        <nav>
+            <a href="/home" style="padding-left: 15px;">Home</a>
+            <div style="float: right; padding-right: 15px;">
+                <a href="/signout/">Log Out</a>
+            </div>
+        </nav>
+    </header>   
+    <body> 
         <div class="container">
             <div class="row">
-                <div class="col-md-6 mx-auto my-5">
-                    <h1 style="margin-top:185px;">tank name</h1> 
-                    <div class="supersection">
+                <div class="col-md-12">
+                    <h1 style="margin-top: 0">{{ tank.name }}</h1>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="buttons-container">
                         <div class="section">
-                            <p>stats</p>
+                            <a href="{% url 'tank_params' tank.id %}">Tank Parameters</a>
+
                         </div>
                         <div class="section">
                             <p>more stats</p>
                         </div>
                         <div class="section">
-                            <a href="/signout/" style="color: black;">delete tank</a>
+                            <a href="/signout/">delete tank</a>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>   
+            <div class="row">
+                <div class="col-md-12">
+                    <h2>Temperature Chart</h2>
+                    <canvas id="temperatureChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <script>
+            const timestamps = [
+                '2023-04-01T00:00:00',
+                '2023-04-02T00:00:00',
+                '2023-04-03T00:00:00',
+                '2023-04-04T00:00:00',
+                '2023-04-05T00:00:00'
+            ];
+
+            const values = [20, 21, 22, 23, 24];
+
+            console.log("Timestamps:", timestamps);
+            console.log("Values:", values);
+
+            const data = {
+                labels: timestamps,
+                datasets: [{
+                    label: 'Temperature',
+                    data: values,
+                    fill: false,
+                    borderColor: 'rgb(75, 192, 192)',
+                    tension: 0.1
+                }]
+            };
+
+            const config = {
+                type: 'line',
+                data: data,
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: {
+                            type: 'time',
+                            time: {
+                                unit: 'day'
+                            }
+                        }
+                    }
+                }
+            };
+
+            const temperatureChart = new Chart(
+                document.getElementById('temperatureChart'),
+                config
+            );
+        </script>
     </body>
 </html>
-{%endblock%}
+{% endblock %}
