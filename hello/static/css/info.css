@@ -1,59 +1,91 @@
+header {
+    background-color: #6d9c6d; /* Same color as the create account button */
+    font-size: 25px; /* Bigger font size */
+   
+}
+a{
+    color: black;
+}
+
 .container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    border: 1px solid #3b4e3b;
+    font-family: 'DejaVu Sans Mono', monospace;
+    height: auto;
+    margin-top: 20px;
+  }
+  
+  .row {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+  }
+  
+  .col-md-12 {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+  }
+  
+  .supersection {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-top: 10px;
+  }
+  
+  .section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #6d9c6d;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 0 5px;
+  }
+  
+  h1 {
+    font-size: 30px;
+    margin: 20px 0 0 0;
+    text-align: center;
+  }
+  
+
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: 'DejaVu Sans Mono', monospace;
+}
+
+.buttons-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    border: 1px solid #3b4e3b; /* Add a thin border around the entire container */
-    font-family: 'DejaVu Sans Mono', monospace;
-}
-/* Style the already have account link */
-a {
-    text-align: center;
-    font-size: 14px;
-    margin-top: 30px; /* Add more space between link and form */
-    font-family: 'DejaVu Sans Mono', monospace; /* Use the DejaVu Sans Mono font */
-    align-items: center; /* Align the link to the center */
 }
 
-header {
-    background-color: #6d9c6d; /* Same color as the create account button */
-    color: white;
-    font-size: 50px; /* Bigger font size */
-    height: 60px; /* Bigger height */
-    justify-content: space-between; /* Add space between elements */
-}
-
-header a, header div a {
-    color: white;
-}
-
-h1{
-    float: left; /* Move the form to the right */
-    text-align: center;
-    margin-right: 75px; /* Add space between the header and form */
-    font-family: 'DejaVu Sans Mono', monospace;
-}
-
-.supersection {
-    float: right; /* Move the form to the right */
-    text-align: center;
-    margin: 50px 0; /* Add more space between header and form */
-    align-items: center; /* Align the form to the center */
-    
-}
-.section {
-    border: 1px solid #6d9c6d; /* add border like the 'sensor-boxes' */
-    border-radius: 5px; /* add rounded edges like the 'sensor-boxes' */
-    padding: 10px;
+.buttons-container .section {
+    margin-right: 10px;
     margin-bottom: 20px;
 }
 
-button {
-    background-color: #6d9c6d; /* Change to a seaweed/earth tone color */
-    color: white;
-    border-radius: 25px;
-    padding: 5px 10px; /* Increase the padding for the submit button */
-    font-family: 'DejaVu Sans Mono', monospace; /* Use the DejaVu Sans Mono font */
+.buttons-container .section:last-child {
+    margin-right: 0;
 }
-
-
+canvas#temperatureChart {
+    width: 100%;
+    height: 300px;
+  }
+  canvas {
+    width: calc(100% + 60px);
+  }

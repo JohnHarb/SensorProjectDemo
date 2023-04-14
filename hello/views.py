@@ -4,6 +4,7 @@ from django.http import JsonResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from hello.models import *
+from .models import LogData
 import json
 import re
 
@@ -62,9 +63,22 @@ class profile(View):
     tNum = str(len(Tank.objects.filter(user=user)))
     return render(request,'hello/profile.html', {"name": user.first_name + " " + user.last_name, "email": user.email, "tanks": tNum})
 
-class tankHome(View):
-  def get(self, request):
-    return render(request,'hello/tankhome.html')
+def tankhome(request, tank_id):
+    tank = get_object_or_404(Tank, pk=tank_id)
+    # Add code to retrieve temperature data and pass it to the template.
+    # You may need to adjust the following example according to your LogData model structure.
+    log_data = tank.logdata_set.filter(type=LogData.types.index(('te', 'temp'))).order_by('time_stamp')
+    timestamps = [data.time_stamp.strftime('%Y-%m-%dT%H:%M:%S') for data in log_data]
+    values = [float(data.value) for data in log_data]
+
+    context = {
+        'tank': tank,
+        'timestamps': json.dumps(timestamps),
+        'values': json.dumps(values),
+    }
+
+    return render(request, 'hello/TankHome.html', context)
+
 
 class addTank(View):
   def get(self, request):
