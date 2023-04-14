@@ -51,11 +51,12 @@ class signIn(View):
     messages.error(request, "invalid credentials")
     return redirect('/signin/')
  
-class home(View):
-  def get(self, request):
-    tanks = Tank.objects.filter(user=request.user)
-    #sensors = Sensor.objects.filter(user=request.user)
-    return render(request,'hello/home.html', {"tanks": tanks})
+def home(request):
+    tanks = Tank.objects.all()
+    context = {
+        'tanks': tanks,
+    }
+    return render(request, 'hello/Home.html', context)
 
 class profile(View):
   def get(self, request):

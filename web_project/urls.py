@@ -21,7 +21,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("", views.signUp.as_view()),
     path("signin/", views.signIn.as_view()),
-    path("home/", views.home.as_view()),
+    path("home/", views.home),
     path("profile/", views.profile.as_view()),
     path('tankhome/<int:tank_id>/', views.tankhome, name='tankhome'),
     path("addtank/", views.addTank.as_view()),
