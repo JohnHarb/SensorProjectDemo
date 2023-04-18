@@ -157,15 +157,19 @@ def check_log_data(sender, instance: LogData, created, **kwargs):
             if profile.email_notifications:
                 print("when email should be sent")
                 subject = "AquaWatch: tank, %s, has a parameter out of expected range", data.tank.name
+                message = "Parameter, {data.type}, is out of range. \n Reported value: {data.value}"
                 send_mail(
                     subject,
-                    'Here is the message.',
+                    message,
                     'from@example.com',
                     [data.tank.user.email],
                     fail_silently=False,
                 )
             if profile.phone_notifications:
                 print("when text should be sent")
+            if profile.phone_notifications or profile.email_notifications:
+                data.tank.last_notification_time = today
+
 
 
 @receiver(post_save, sender=Tank)  # uses signals to create connected param when a tank is created
