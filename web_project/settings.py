@@ -132,9 +132,6 @@ STATIC_URL = 'static/'
 ALLOWED_HOSTS = ['*']
 X_FRAME_OPTIONS = '*'
 
-# console backend for testing texts
-SMS_BACKEND = 'sms.backends.console.SmsBackend'
-
 # console backend for testing emails
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # EMAIL_HOST = 'smtp.gmail.com'
