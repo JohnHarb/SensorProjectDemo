@@ -132,6 +132,16 @@ STATIC_URL = 'static/'
 ALLOWED_HOSTS = ['*']
 X_FRAME_OPTIONS = '*'
 
+# console backend for testing emails
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_HOST_USER = 'myemailaddress@gmail.com'
+# EMAIL_HOST_PASSWORD = 'mypassword'
+# EMAIL_USE_TLS = True
+# EMAIL_PORT = 587
+# DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
