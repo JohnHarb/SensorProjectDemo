@@ -134,9 +134,6 @@ class tankParams(View):
           {'name': 'salinity', 'label': 'Salinity', 'min_value': parameters.salinity_min if parameters else None, 'max_value': parameters.salinity_max if parameters else None},
           {'name': 'ammonia', 'label': 'Ammonia', 'min_value': parameters.ammonia_min if parameters else None, 'max_value': parameters.ammonia_max if parameters else None},
       ]
-      # Print the tank's max temperature
-      print(tank.parameters.temp_max)
-
       context = RequestContext(request, {
           'tank': tank,
           'parameters': parameters,
@@ -148,7 +145,6 @@ class tankParams(View):
     
   def post(self, request, tank_id):
       tank = get_object_or_404(Tank, id=tank_id)
-      print(self)
       parameters = tank.parameters
       form = ParametersForm(request.POST, instance=parameters, tank=tank, initial={'tank_id': tank_id})
 

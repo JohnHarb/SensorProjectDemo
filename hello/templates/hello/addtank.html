@@ -34,7 +34,7 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <input type="checkbox" id="{{ parameter.name|lower|slugify }}_enabled" name="{{ parameter.name|lower|slugify }}_enabled" value="yes" onclick="toggleInput('{{ parameter.name|lower|slugify }}')" {% if parameters|get_enabled:parameter.name %}checked{% endif %}>
+                                <input type="text" class="form-control" id="wcap" name="wcap" placeholder="water capacity (gal)" required/>
                             </div>
                             <div class="form-group">
                                 <input type="text" class="form-control" id="mID" name="mID" placeholder="module ID number" required/>
