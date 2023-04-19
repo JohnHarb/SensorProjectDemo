@@ -156,8 +156,8 @@ def check_log_data(sender, instance: LogData, created, **kwargs):
         if tank_notifications and (data.value < param_range[0] or data.value > param_range[1]): # value is out of bounds
             if profile.email_notifications:
                 print("when email should be sent")
-                subject = "AquaWatch: tank, %s, has a parameter out of expected range", data.tank.name
-                message = "Parameter, {data.type}, is out of range. \n Reported value: {data.value}"
+                subject = f"AquaWatch: tank, {data.tank.name}, has a parameter out of expected range"
+                message = f"Parameter, {data.types[data.type][1]}, is out of range. \nReported value: {data.value}"
                 send_mail(
                     subject,
                     message,
@@ -168,7 +168,7 @@ def check_log_data(sender, instance: LogData, created, **kwargs):
             if profile.phone_notifications:
                 print("when text should be sent")
             if profile.phone_notifications or profile.email_notifications:
-                data.tank.last_notification_time = today
+                data.tank.last_notification_time = datetime.datetime.today()
 
 
 
