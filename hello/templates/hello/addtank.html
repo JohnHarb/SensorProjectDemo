@@ -14,7 +14,7 @@
             <div class="row">
                 <div class="col-md-6 mx-auto my-5">
                     <h1 style="margin-top:185px;">add tank</h1> 
-                    <form method="post" action="/">
+                    <form method="post" action="/addtank/">
                         {% csrf_token %}
                             {% if messages %}
                                 {% for message in messages %}
