@@ -1,10 +1,14 @@
+from django.forms import model_to_dict
 from django.shortcuts import render, redirect
 from django.views import View 
 from django.http import JsonResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from hello.models import *
+from .models import Tank
+from django.template import RequestContext
 from .models import LogData
+from django.template.defaulttags import register
 import json
 import re
 
@@ -118,22 +122,51 @@ from .models import Tank, Parameters
 
 from django.shortcuts import get_object_or_404
 from .models import Tank, Parameters
+from .forms import ParametersForm
 
 class tankParams(View):
-    def get(self, request, tank_id):
-        tank = get_object_or_404(Tank, id=tank_id)
-        parameters = tank.parameters  # Assuming the related name is 'parameters'
-        parameter_list = [
-            {'name': 'temp', 'label': 'Temperature'},
-            {'name': 'ph', 'label': 'pH'},
-            {'name': 'salinity', 'label': 'Salinity'},
-            {'name': 'ammonia', 'label': 'Ammonia'},
-        ]
+  def get(self, request, tank_id):
+      tank = get_object_or_404(Tank, id=tank_id)
+      parameters = tank.parameters  # Assuming the related name is 'parameters'
+      parameter_list = [
+          {'name': 'temp', 'label': 'Temperature', 'min_value': parameters.temp_min if parameters else None, 'max_value': parameters.temp_max if parameters else None},
+          {'name': 'ph', 'label': 'pH', 'min_value': parameters.ph_min if parameters else None, 'max_value': parameters.ph_max if parameters else None},
+          {'name': 'salinity', 'label': 'Salinity', 'min_value': parameters.salinity_min if parameters else None, 'max_value': parameters.salinity_max if parameters else None},
+          {'name': 'ammonia', 'label': 'Ammonia', 'min_value': parameters.ammonia_min if parameters else None, 'max_value': parameters.ammonia_max if parameters else None},
+      ]
+      # Print the tank's max temperature
+      print(tank.parameters.temp_max)
 
-        context = {
-            'tank': tank,
-            'parameters': parameters,
-            'parameter_list': parameter_list,
-        }
-        return render(request, 'hello/tankparams.html', context)
+      context = RequestContext(request, {
+          'tank': tank,
+          'parameters': parameters,
+          'parameter_list': parameter_list,
+      })
+      context.update({'get_enabled': get_enabled})  # Add the custom filter to the context
+      return render(request, 'hello/tankparams.html', context.flatten())
 
+    
+  def post(self, request, tank_id):
+      tank = get_object_or_404(Tank, id=tank_id)
+      print(self)
+      parameters = tank.parameters
+      form = ParametersForm(request.POST, instance=parameters, tank=tank, initial={'tank_id': tank_id})
+
+      if form.is_valid():
+          print(form.cleaned_data)
+          form.save()
+          messages.success(request, 'Parameters saved successfully')
+          return redirect('tank_params', tank_id=tank_id)
+      else:
+          messages.error(request, 'There was an error saving the parameters')
+          print(form.errors)
+
+      return self.get(request, tank_id)
+
+@register.filter
+def get_enabled(parameters, parameter_name):
+    if not parameters:
+        return False
+
+    enabled_field = f"{parameter_name.lower()}_enabled"
+    return getattr(parameters, enabled_field)
