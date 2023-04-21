@@ -21,14 +21,16 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("", views.signUp.as_view()),
     path("signin/", views.signIn.as_view()),
-    path("home/", views.home),
+    path("home/", views.home.as_view()),
     path("profile/", views.profile.as_view()),
     path('tankhome/<int:tank_id>/', views.tankhome, name='tankhome'),
     path("addtank/", views.addTank.as_view()),
      path("manualinput/", views.manualInput.as_view()),
     path("aboutus/", views.aboutUs.as_view()),
     path("signout/", views.signOut.as_view()),
-    path('tankparams/<int:tank_id>/', views.tankParams.as_view(), name='tank_params'), 
+    path('tankparams/<int:tank_id>/', views.tankParams.as_view(), name='tank_params'),
+    path("deletetank/", views.deleteTank.as_view()),
+    #path("tankmanage/", views.tankManage.as_view()),
 ]
 
 

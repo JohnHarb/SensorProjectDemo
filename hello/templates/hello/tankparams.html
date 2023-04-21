@@ -1,6 +1,6 @@
-
+{% extends "hello/nav.html" %}
 {% load static %}
-<!DOCTYPE html>
+{% block content %}
 <html>
     <head>
         <meta charset="utf-8" />
@@ -16,15 +16,7 @@
                 maxInput.disabled = !checkbox.checked;
             }
         </script>
-    </head>
-    <header>
-        <nav>
-            <a href="/" style="padding-left: 15px;">snsr</a>
-            <div style="float: right; padding-right: 15px;">
-                <a href="/aboutus/">about us</a>
-            </div>
-        </nav>
-    </header>       
+    </head>    
     <body>
         <div class="container">
             <div class="row">
@@ -77,3 +69,4 @@
         </div>        
     </body>
 </html>
+{% endblock %}
