@@ -19,7 +19,7 @@ def checkemail(email):
         return True
     else:
         return False
-
+    
 class signUp(View):
   def get(self, request):
    return render(request,'hello/signup.html')
@@ -40,6 +40,28 @@ class signUp(View):
     user.save()
     login(request, user)
     return redirect('/home/')
+      
+class home(View):
+  def get(self, request):
+     tanks = Tank.objects.all()
+     context = {'tanks' : tanks,}
+     return render(request,'hello/home.html',context)
+
+class deleteTank(View):
+  def get(self, request):
+    return render(request,'hello/deletetank.html')
+
+  def post(self, request):
+    email = request.POST["email"]
+    password = request.POST["password"]
+    deletetank = Tank.user
+    user = authenticate(request, username=email, password=password)
+    if user is not None:
+        login(request, user)
+        deleteTank(deletetank)
+        return redirect('/home/')
+    messages.error(request, "invalid credentials")
+    return redirect('/deletetank/')
 
 class signIn(View):
   def get(self, request):
@@ -54,14 +76,7 @@ class signIn(View):
         return redirect('/home/')
     messages.error(request, "invalid credentials")
     return redirect('/signin/')
- 
-def home(request):
-    tanks = Tank.objects.all()
-    context = {
-        'tanks': tanks,
-    }
-    return render(request, 'hello/Home.html', context)
-
+    
 class profile(View):
   def get(self, request):
     user = request.user
