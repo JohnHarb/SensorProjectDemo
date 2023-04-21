@@ -7,6 +7,8 @@ from django.contrib import messages
 from hello.models import *
 from .models import Tank
 from django.template import RequestContext
+from django.core.serializers.json import DjangoJSONEncoder
+
 from .models import LogData
 from django.template.defaulttags import register
 import json
@@ -70,16 +72,33 @@ class profile(View):
 
 def tankhome(request, tank_id):
     tank = get_object_or_404(Tank, pk=tank_id)
-    # Add code to retrieve temperature data and pass it to the template.
-    # You may need to adjust the following example according to your LogData model structure.
-    log_data = tank.logdata_set.filter(type=LogData.types.index(('te', 'temp'))).order_by('time_stamp')
-    timestamps = [data.time_stamp.strftime('%Y-%m-%dT%H:%M:%S') for data in log_data]
-    values = [float(data.value) for data in log_data]
+    
+    # Retrieve log data for each parameter
+    log_data_temperature = tank.logdata_set.filter(type=LogData.types.index(('te', 'temp'))).order_by('time_stamp')
+    log_data_ph = tank.logdata_set.filter(type=LogData.types.index(('ph', 'ph'))).order_by('time_stamp')
+    log_data_salinity = tank.logdata_set.filter(type=LogData.types.index(('sa', 'salinity'))).order_by('time_stamp')
+
+    # Prepare data for each parameter
+    temperature_timestamps = [data.time_stamp.strftime('%Y-%m-%dT%H:%M:%S') for data in log_data_temperature]
+    temperature_values = [float(data.value) for data in log_data_temperature]
+
+    ph_timestamps = [data.time_stamp.strftime('%Y-%m-%dT%H:%M:%S') for data in log_data_ph]
+    ph_values = [float(data.value) for data in log_data_ph]
+
+    salinity_timestamps = [data.time_stamp.strftime('%Y-%m-%dT%H:%M:%S') for data in log_data_salinity]
+    salinity_values = [float(data.value) for data in log_data_salinity]
 
     context = {
         'tank': tank,
-        'timestamps': json.dumps(timestamps),
-        'values': json.dumps(values),
+        'temperature_timestamps': json.dumps(temperature_timestamps),
+        'temperature_values': json.dumps(temperature_values),
+        'temp_enabled': tank.parameters.temp_enabled if tank.parameters else False,
+        'ph_timestamps': json.dumps(ph_timestamps),
+        'ph_values': json.dumps(ph_values),
+        'ph_enabled': tank.parameters.ph_enabled if tank.parameters else False,
+        'salinity_timestamps': json.dumps(salinity_timestamps),
+        'salinity_values': json.dumps(salinity_values),
+        'salinity_enabled': tank.parameters.salinity_enabled if tank.parameters else False,
     }
 
     request.session['tank_id'] = tank_id
