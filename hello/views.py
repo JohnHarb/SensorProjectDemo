@@ -202,6 +202,8 @@ def get_enabled(parameters, parameter_name):
 
     enabled_field = f"{parameter_name.lower()}_enabled"
     return getattr(parameters, enabled_field)
+<<<<<<< HEAD
+=======
 
 class manualInput(View):
     def get(self, request):
@@ -233,3 +235,4 @@ class manualInput(View):
         return redirect(f'/tankhome/{tank_id}/')
 
   
+>>>>>>> d1adfac3b1e7e7499aa31313a7558b95722330ec
