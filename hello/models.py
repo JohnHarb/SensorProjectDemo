@@ -108,21 +108,21 @@ class Parameters(models.Model):
         return param_dict
 
     # intended to get w/ helper, change, then set w/ helper
-    def set_dict_of_range(self, param_dict: dict[str, list[float, float]]):
-        if list(param_dict.keys()) != list(self.get_dict_of_range().keys()):
-            raise ValueError("The dict must match keys and types with get_dict_of_range()")
-        else:
-            self.temp_min = param_dict.get('temp')[0]
-            self.temp_max = param_dict.get('temp')[1]
-            self.ph_min = param_dict.get('ph')[0]
-            self.ph_max = param_dict.get('ph')[1]
-            self.salinity_min = param_dict.get('salinity')[0]
-            self.salinity_max = param_dict.get('salinity')[1]
-            self.ammonia_min = param_dict.get('ammonia')[0]
-            self.ammonia_max = param_dict.get('ammonia')[1]
+    # def set_dict_of_range(self, param_dict: dict[str, list[float, float]]):
+    #     if list(param_dict.keys()) != list(self.get_dict_of_range().keys()):
+    #         raise ValueError("The dict must match keys and types with get_dict_of_range()")
+    #     else:
+    #         self.temp_min = param_dict.get('temp')[0]
+    #         self.temp_max = param_dict.get('temp')[1]
+    #         self.ph_min = param_dict.get('ph')[0]
+    #         self.ph_max = param_dict.get('ph')[1]
+    #         self.salinity_min = param_dict.get('salinity')[0]
+    #         self.salinity_max = param_dict.get('salinity')[1]
+    #         self.ammonia_min = param_dict.get('ammonia')[0]
+    #         self.ammonia_max = param_dict.get('ammonia')[1]
 
-    def __str__(self):
-        return 'Tank %s Parameters' % (self.tank.pk)
+    # def __str__(self):
+    #     return 'Tank %s Parameters' % (self.tank.pk)
 
 class LogData(models.Model):
     tank = models.ForeignKey(Tank, on_delete=models.CASCADE)  # many to one
