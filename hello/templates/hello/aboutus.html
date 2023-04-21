@@ -7,15 +7,6 @@
         <link rel="stylesheet" href="{% static 'css/about.css' %}"/>
         <title>Profile</title>
     </head>
-    <header>
-        <nav>
-            {% if user.is_authenticated %}
-            <a href="/home/" style="padding-left: 15px;">Home</a>
-            {% else %}
-            <a href="/signin/" style="padding-left: 15px;">Home</a>
-            {% endif %}
-        </nav>
-    </header>   
     <body>
         <div class="container">
             <h1>about us</h1> 
