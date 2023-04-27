@@ -50,20 +50,20 @@ class home(View):
      return render(request,'hello/home.html',context)
 
 class deleteTank(View):
-  def get(self, request):
-    return render(request,'hello/deletetank.html')
+  def get(self, request, tank_id):
+    tank = get_object_or_404(Tank, id=tank_id)
+    return render(request,'hello/deletetank.html', {"tank": tank})
 
-  def post(self, request):
+  def post(self, request, tank_id):
     email = request.POST["email"]
     password = request.POST["password"]
-    deletetank = Tank.user
     user = authenticate(request, username=email, password=password)
     if user is not None:
-        login(request, user)
-        deleteTank(deletetank)
+        tank = get_object_or_404(Tank, id=tank_id)
+        tank.delete()
         return redirect('/home/')
     messages.error(request, "invalid credentials")
-    return redirect('/deletetank/')
+    return redirect('tank_delete', tank_id=tank_id)
 
 class signIn(View):
   def get(self, request):
