@@ -115,7 +115,7 @@ class ParametersModelTest(TestCase):
         param.save()
         self.assertEqual(param.temp_min, 70)
 
-    def test_parameter_dict_of_range(self):
+    def test_parameter_dict_of_enabled(self):
         param_dict = {
             "temp": True,
             "ph": True,
