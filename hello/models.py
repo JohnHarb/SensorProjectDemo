@@ -98,6 +98,15 @@ class Parameters(models.Model):
         "ammonia": [0.0, 0.0],
     }
 
+    def get_dict_of_enabled(self):
+        param_dict = {  # "type": boolean format
+            "temp": self.temp_enabled,
+            "ph": self.ph_enabled,
+            "salinity": self.salinity_enabled,
+            "ammonia": self.ammonia_enabled,
+        }
+        return param_dict
+
     def get_dict_of_range(self):
         param_dict = {  # "type": [type_min, type_max] format
             "temp": [self.temp_min.__float__(), self.temp_max.__float__()],
@@ -107,22 +116,22 @@ class Parameters(models.Model):
         }
         return param_dict
 
-    # intended to get w/ helper, change, then set w/ helper
-    # def set_dict_of_range(self, param_dict: dict[str, list[float, float]]):
-    #     if list(param_dict.keys()) != list(self.get_dict_of_range().keys()):
-    #         raise ValueError("The dict must match keys and types with get_dict_of_range()")
-    #     else:
-    #         self.temp_min = param_dict.get('temp')[0]
-    #         self.temp_max = param_dict.get('temp')[1]
-    #         self.ph_min = param_dict.get('ph')[0]
-    #         self.ph_max = param_dict.get('ph')[1]
-    #         self.salinity_min = param_dict.get('salinity')[0]
-    #         self.salinity_max = param_dict.get('salinity')[1]
-    #         self.ammonia_min = param_dict.get('ammonia')[0]
-    #         self.ammonia_max = param_dict.get('ammonia')[1]
+    #intended to get w/ helper, change, then set w/ helper
+    def set_dict_of_range(self, param_dict: dict[str, list[float, float]]):
+        if list(param_dict.keys()) != list(self.get_dict_of_range().keys()):
+            raise ValueError("The dict must match keys and types with get_dict_of_range()")
+        else:
+            self.temp_min = param_dict.get('temp')[0]
+            self.temp_max = param_dict.get('temp')[1]
+            self.ph_min = param_dict.get('ph')[0]
+            self.ph_max = param_dict.get('ph')[1]
+            self.salinity_min = param_dict.get('salinity')[0]
+            self.salinity_max = param_dict.get('salinity')[1]
+            self.ammonia_min = param_dict.get('ammonia')[0]
+            self.ammonia_max = param_dict.get('ammonia')[1]
 
-    # def __str__(self):
-    #     return 'Tank %s Parameters' % (self.tank.pk)
+    def __str__(self):
+        return 'Tank %s Parameters' % (self.tank.pk)
 
 class LogData(models.Model):
     tank = models.ForeignKey(Tank, on_delete=models.CASCADE)  # many to one
@@ -147,12 +156,13 @@ def check_log_data(sender, instance: LogData, created, **kwargs):
     if created:
         data = instance
         param_range = data.tank.parameters.get_dict_of_range().get(data.types[data.type][1])
+        is_enabled = data.tank.parameters.get_dict_of_enabled().get(data.types[data.type][1])
         profile = data.tank.user.profile
         today = datetime.date.today().isoformat()
         last_notification = data.tank.last_notification_time
-        if last_notification != None:
+        if last_notification is not None:
             last_notification = last_notification.date().isoformat()
-        tank_notifications = data.tank.send_notifications and (not data.is_manual) and last_notification != today
+        tank_notifications = data.tank.send_notifications and (not data.is_manual) and last_notification != today and is_enabled
         if tank_notifications and (data.value < param_range[0] or data.value > param_range[1]): # value is out of bounds
             if profile.phone_notifications or profile.email_notifications:
                 data.tank.last_notification_time = datetime.datetime.today()
