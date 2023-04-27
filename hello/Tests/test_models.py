@@ -115,6 +115,22 @@ class ParametersModelTest(TestCase):
         param.save()
         self.assertEqual(param.temp_min, 70)
 
+    def test_parameter_dict_of_enabled(self):
+        param_dict = {
+            "temp": True,
+            "ph": True,
+            "salinity": True,
+            "ammonia": True,
+        }
+        param = Parameters.objects.get(id=1)
+        self.assertEqual(param.get_dict_of_enabled(), param_dict)
+
+        param.ammonia_enabled = False
+        param.save()
+        param_dict["ammonia"] = False
+        self.assertEqual(param.get_dict_of_enabled(), param_dict)
+
+
 
 
     def test__str__(self):
