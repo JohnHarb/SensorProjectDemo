@@ -31,6 +31,32 @@
                     </div>
                 </div>
             </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <h2>Log Parameter</h2>
+                        <form method="post" action="{% url 'log_parameter' tank.id %}">
+                        {% csrf_token %}
+                        <label for="value">Value:</label>
+                        <input type="text" id="value" name="value" required>
+
+                        <label for="parameter_type">Parameter Type:</label>
+                        <select id="parameter_type" name="parameter_type" required>
+                            <option value="" disabled selected>Select parameter type</option>
+                            <option value="te">Temperature</option>
+                            <option value="ph">pH</option>
+                            <option value="sa">Salinity</option>
+                            <option value="am">Ammonia</option>
+                        </select>
+
+                        <button type="submit">Submit</button>
+                    </form>
+                </div>
+            </div>
+
+
+
+
             {% if temp_enabled %}
             <div class="row">
                 <div class="col-md-12">
