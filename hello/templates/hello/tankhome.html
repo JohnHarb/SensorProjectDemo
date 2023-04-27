@@ -21,13 +21,12 @@
                     <div class="buttons-container">
                         <div class="section">
                             <a href="{% url 'tank_params' tank.id %}">Tank Parameters</a>
-
                         </div>
                         <div class="section">
                             <p>more stats</p>
                         </div>
                         <div class="section">
-                            <a href="/deletetank/">delete tank</a>
+                            <a href="{% url 'tank_delete' tank.id %}">delete tank</a>
                         </div>
                     </div>
                 </div>

@@ -29,7 +29,7 @@ urlpatterns = [
     path("aboutus/", views.aboutUs.as_view()),
     path("signout/", views.signOut.as_view()),
     path('tankparams/<int:tank_id>/', views.tankParams.as_view(), name='tank_params'),
-    path("deletetank/", views.deleteTank.as_view()),
+    path("deletetank/<int:tank_id>/", views.deleteTank.as_view(), name='tank_delete'),
     #path("tankmanage/", views.tankManage.as_view()),
 ]
 
