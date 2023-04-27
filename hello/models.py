@@ -6,7 +6,7 @@ from phonenumber_field.modelfields import PhoneNumberField  # library for verify
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.core.mail import send_mail
-
+from sms import send_sms
 
 # send_mail(
 #     'Subject here',
@@ -154,6 +154,8 @@ def check_log_data(sender, instance: LogData, created, **kwargs):
             last_notification = last_notification.date().isoformat()
         tank_notifications = data.tank.send_notifications and (not data.is_manual) and last_notification != today
         if tank_notifications and (data.value < param_range[0] or data.value > param_range[1]): # value is out of bounds
+            if profile.phone_notifications or profile.email_notifications:
+                data.tank.last_notification_time = datetime.datetime.today()
             if profile.email_notifications:
                 print("when email should be sent")
                 subject = f"AquaWatch: tank, {data.tank.name}, has a parameter out of expected range"
@@ -167,8 +169,15 @@ def check_log_data(sender, instance: LogData, created, **kwargs):
                 )
             if profile.phone_notifications:
                 print("when text should be sent")
-            if profile.phone_notifications or profile.email_notifications:
-                data.tank.last_notification_time = datetime.datetime.today()
+                message = f"AquaWatch: Tank: {data.tank.name},Parameter: {data.types[data.type][1]}, is out of range. \nReported value: {data.value}"
+                send_sms(
+                    message,
+                    '+12065550100',
+                    [data.tank.user.profile.phone_num],
+                    fail_silently=False
+                )
+
+
 
 
 
