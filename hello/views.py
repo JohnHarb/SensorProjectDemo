@@ -1,18 +1,16 @@
 from django.forms import model_to_dict
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View 
 from django.http import JsonResponse
 from django.contrib.auth import authenticate, login, logout
-from django.contrib import messages
-from hello.models import *
-from .models import Tank
+from django.contrib import messages 
+from .models import *
 from django.template import RequestContext
 from django.core.serializers.json import DjangoJSONEncoder
-from datetime import datetime
-from .models import LogData
 from django.template.defaulttags import register
 import json
 import re
+from .forms import ParametersForm
 
 regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
 
@@ -45,9 +43,8 @@ class signUp(View):
       
 class home(View):
   def get(self, request):
-     tanks = Tank.objects.all()
-     context = {'tanks' : tanks,}
-     return render(request,'hello/home.html',context)
+     tanks = Tank.objects.filter(user=request.user)
+     return render(request,'hello/home.html', {'tanks': tanks})
 
 class deleteTank(View):
   def get(self, request, tank_id):
@@ -194,14 +191,6 @@ class signOut(View):
   def get(self, request):
     logout(request)
     return redirect('/signin/')
-  
-from django.shortcuts import render, get_object_or_404
-from django.views import View
-from .models import Tank, Parameters
-
-from django.shortcuts import get_object_or_404
-from .models import Tank, Parameters
-from .forms import ParametersForm
 
 class tankParams(View):
   def get(self, request, tank_id):
@@ -245,36 +234,6 @@ def get_enabled(parameters, parameter_name):
 
     enabled_field = f"{parameter_name.lower()}_enabled"
     return getattr(parameters, enabled_field)
-
-
-class manualInput(View):
-    def get(self, request):
-        tank_id = request.session.get('tank_id')
-        return redirect(f'/tankhome/{tank_id}/')
-
-    def post(self, request):
-        tank_id = request.session.get('tank_id')
-        tank = get_object_or_404(Tank, id=tank_id)
-
-        nitrate = request.POST.get('nitrate')
-        if nitrate:
-            nitrate = float(nitrate)
-
-        nitrite = request.POST.get('nitrite')
-        if nitrite:
-            nitrite = float(nitrite)
-
-        alkalinity = request.POST.get('alkalinity')
-        if alkalinity:
-            alkalinity = float(alkalinity)
-
-        general_hardness = None
-        if tank.type == 'freshwater':
-            general_hardness = request.POST.get('general-hardness')
-            if general_hardness:
-                general_hardness = float(general_hardness)
-
-        return redirect(f'/tankhome/{tank_id}/')
 
 def log_parameter(request, tank_id):
     if request.method == 'POST':
