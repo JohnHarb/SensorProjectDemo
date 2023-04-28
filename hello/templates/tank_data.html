@@ -1,0 +1,30 @@
+{% extends "hello/Nav.html" %}
+{% block content %}
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Raw Data - {{ tank.name }}</title>
+</head>
+<body>
+    <h1>Raw Data for {{ tank.name }}</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Timestamp</th>
+                <th>Parameter Type</th>
+                <th>Value</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for data in raw_data %}
+                <tr>
+                    <td>{{ data.timestamp }}</td>
+                    <td>{{ data.parameter_type }}</td>
+                    <td>{{ data.value }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
+{% endblock %}

@@ -1,4 +1,4 @@
-{% extends "hello/nav.html" %}
+{% extends "hello/Nav.html" %}
 {% load static %}
 {% block content %}
 <html>
@@ -7,8 +7,12 @@
         <link rel="stylesheet" href="{% static 'css/tankhome.css' %}"/>
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-annotation/1.0.2/chartjs-plugin-annotation.min.js" integrity="sha512-m4BwvpdB4vTODb1hvkGKav8Gid9yNvFzwBmQk7JjnD17kcZMhyvGm/3JzB1x8q3yA9mxE+Yp5d5O5O5w5J5L0Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
         <title>TankHome</title>
-    </head>    
+    </head>  
+    <header>
+    </header>   
     <body> 
         <div class="container">
             <div class="row">
@@ -21,9 +25,10 @@
                     <div class="buttons-container">
                         <div class="section">
                             <a href="{% url 'tank_params' tank.id %}">Tank Parameters</a>
+
                         </div>
                         <div class="section">
-                            <p>more stats</p>
+                            <a href="{% url 'tank_data' tank.id %}">more stats</a>
                         </div>
                         <div class="section">
                             <a href="{% url 'tank_delete' tank.id %}">delete tank</a>
@@ -32,6 +37,27 @@
                 </div>
             </div>
             {% if temp_enabled %}
+            <div class="row">
+                <div class="col-md-12">
+                    <h2>Log Parameter</h2>
+                    <form method="post" action="{% url 'log_parameter' tank.id %}">
+                        {% csrf_token %}
+                        <label for="value">Value:</label>
+                        <input type="text" id="value" name="value" required>
+                      
+                        <label for="parameter_type">Parameter Type:</label>
+                        <select id="parameter_type" name="parameter_type" required>
+                          <option value="" disabled selected>Select parameter type</option>
+                          <option value="te">Temperature</option>
+                          <option value="ph">pH</option>
+                          <option value="sa">Salinity</option>
+                          <option value="am">Ammonia</option>
+                        </select>
+                      
+                        <button type="submit">Submit</button>
+                      </form>
+                </div>
+            </div>
             <div class="row">
                 <div class="col-md-12">
                     <h2>Temperature Chart</h2>
@@ -57,86 +83,112 @@
                 </div>
             </div>
         {% endif %}
-            <div class="row">
-                <div class="col-md-12">
-                    <form method="post" action="/manualinput/">
-                        {% csrf_token %}
-                        <h2>manual input parameters</h2>
-                        <div>
-                            <input type="number" name="nitrate" id="nitrate" placeholder="nitrate">
-                        </div>
-                        <div>
-                            <input type="number" name="nitrite" id="nitrite" placeholder="nitrite">
-                        </div>
-                        <div>
-                            <input type="number" name="alkalinity" id="alkalinity" placeholder="alkalinity KH">
-                        </div>
-                        {% if tank.type == 'freshwater' %}
-                        <div>
-                            <input type="number" name="general-hardness" id="general-hardness" placeholder="general Hardness GH">
-                        </div>
-                        {% endif %}
-                        <div>
-                            <button type="submit">submit</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
+        
         </div>
         <script>
-            function createChart(chartId, label, timestamps, values) {
-                const data = {
-                    labels: timestamps,
-                    datasets: [{
-                        label: label,
-                        data: values,
-                        fill: false,
-                        borderColor: 'rgb(75, 192, 192)',
-                        tension: 0.1
-                    }]
-                };
-        
-                const config = {
-                    type: 'line',
-                    data: data,
-                    options: {
-                        responsive: true,
-                        scales: {
-                            x: {
-                                type: 'time',
-                                time: {
-                                    unit: 'day'
-                                }
-                            }
-                        }
-                    }
-                };
-        
-                return new Chart(
-                    document.getElementById(chartId),
-                    config
-                );
+function createChart(chartId, label, timestamps, values, min, max) {
+    const data = {
+        labels: timestamps,
+        datasets: [{
+            label: label,
+            data: values,
+            fill: false,
+            borderColor: 'rgb(75, 192, 192)',
+            tension: 0.1,
+            pointBackgroundColor: values.map(value => value < min || value > max ? 'red' : 'rgb(75, 192, 192)')
+        }]
+    };
+
+    const customBackgroundPlugin = {
+        id: 'customBackground',
+        beforeDraw: (chart, args, options) => {
+            const ctx = chart.ctx;
+            const chartArea = chart.chartArea;
+            const yAxis = chart.scales.y;
+
+            ctx.save();
+            ctx.fillStyle = 'red';
+
+            if (yAxis.min < min) {
+                const yMax = yAxis.getPixelForValue(max);
+                ctx.fillRect(chartArea.left, chartArea.top, chartArea.width, yMax - chartArea.top);
             }
-        
+
+            if (yAxis.max > max) {
+                const yMin = yAxis.getPixelForValue(min);
+                ctx.fillRect(chartArea.left, yMin, chartArea.width, chartArea.bottom - yMin);
+            }
+
+            ctx.restore();
+        }
+    };
+
+    const config = {
+        type: 'line',
+        data: data,
+        options: {
+            responsive: true,
+            scales: {
+                x: {
+                    type: 'time',
+                    time: {
+                        unit: 'day'
+                    }
+                },
+                y: {
+                    min: 0.8 * min,
+                    max: 1.2 * max
+                }
+            },
+            plugins: {
+                customBackground: {},
+                annotation: {
+                    annotations: [
+                        {
+                            type: 'box',
+                            yMin: min,
+                            yMax: max,
+                            backgroundColor: 'rgba(255, 0, 0, 0.1)'
+                        }
+                    ]
+                }
+            }
+        },
+        plugins: [customBackgroundPlugin]
+    };
+
+    return new Chart(
+        document.getElementById(chartId),
+        config
+    );
+}
+
+            
             {% if temp_enabled %}
                 const temperatureTimestamps = {{ temperature_timestamps|safe }};
                 const temperatureValues = {{ temperature_values|safe }};
-                createChart('temperatureChart', 'Temperature', temperatureTimestamps, temperatureValues);
+                const temp_min = {{ temp_min }};
+                const temp_max = {{ temp_max }};
+                createChart('temperatureChart', 'Temperature', temperatureTimestamps, temperatureValues, temp_min, temp_max);
             {% endif %}
-        
+            
             {% if ph_enabled %}
                 const phTimestamps = {{ ph_timestamps|safe }};
                 const phValues = {{ ph_values|safe }};
-                createChart('phChart', 'pH', phTimestamps, phValues);
+                const ph_min = {{ ph_min }};
+                const ph_max = {{ ph_max }};
+                createChart('phChart', 'pH', phTimestamps, phValues, ph_min, ph_max);
             {% endif %}
-        
+            
             {% if salinity_enabled %}
                 const salinityTimestamps = {{ salinity_timestamps|safe }};
                 const salinityValues = {{ salinity_values|safe }};
-                createChart('salinityChart', 'Salinity', salinityTimestamps, salinityValues);
+                const salinity_min = {{ salinity_min }};
+                const salinity_max = {{ salinity_max }};
+                createChart('salinityChart', 'Salinity', salinityTimestamps, salinityValues, salinity_min, salinity_max);
             {% endif %}
-        </script>
-        
+            </script>
+             
         
     </body>
 </html>

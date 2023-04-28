@@ -8,7 +8,7 @@ from hello.models import *
 from .models import Tank
 from django.template import RequestContext
 from django.core.serializers.json import DjangoJSONEncoder
-
+from datetime import datetime
 from .models import LogData
 from django.template.defaulttags import register
 import json
@@ -85,8 +85,11 @@ class profile(View):
     tNum = str(len(Tank.objects.filter(user=user)))
     return render(request,'hello/profile.html', {"name": user.first_name + " " + user.last_name, "email": user.email, "tanks": tNum})
 
-def tankhome(request, tank_id):
+class TankHomeView(View):
+  def get(self, request, tank_id):
     tank = get_object_or_404(Tank, pk=tank_id)
+
+    #Retreive the parameter ranges
     
     # Retrieve log data for each parameter
     log_data_temperature = tank.logdata_set.filter(type=LogData.types.index(('te', 'temp'))).order_by('time_stamp')
@@ -114,11 +117,51 @@ def tankhome(request, tank_id):
         'salinity_timestamps': json.dumps(salinity_timestamps),
         'salinity_values': json.dumps(salinity_values),
         'salinity_enabled': tank.parameters.salinity_enabled if tank.parameters else False,
+        #Parameter ranges
+        'temp_min': tank.parameters.temp_min,
+        'temp_max': tank.parameters.temp_max,
+        'ph_min': tank.parameters.ph_min,
+        'ph_max': tank.parameters.ph_max,
+        'salinity_min': tank.parameters.salinity_min,
+        'salinity_max': tank.parameters.salinity_max,
     }
 
-    request.session['tank_id'] = tank_id
-
     return render(request, 'hello/TankHome.html', context)
+  
+  def log_parameter(request, tank_id):
+    if request.method == 'POST':
+        tank = get_object_or_404(Tank, pk=tank_id)
+        value = request.POST.get('value')
+        parameter_type = request.POST.get('parameter_type')
+
+        parameter_type_index = LogData.types.index((parameter_type, dict(LogData.types)[parameter_type]))
+
+        new_log_data = LogData(tank=tank, type=parameter_type_index, value=value, time_stamp=datetime.now(), is_manual=True)
+        new_log_data.save()
+        messages.success(request, 'Parameter logged successfully.')
+
+    return redirect('tankhome', tank_id=tank_id)
+  
+class LogParameterView(View):
+    def post(self, request, tank_id):
+      if request.method == 'POST':
+          tank = get_object_or_404(Tank, pk=tank_id)
+          value = request.POST.get('value')
+          parameter_type = request.POST.get('parameter_type')
+
+          # Check if parameter_type is valid
+          if not any(t[0] == parameter_type for t in LogData.types):
+              messages.error(request, 'Invalid parameter type.')
+              return redirect('tankhome', tank_id=tank_id)
+
+          parameter_type_index = LogData.types.index((parameter_type, dict(LogData.types)[parameter_type]))
+
+          new_log_data = LogData(tank=tank, type=parameter_type_index, value=value, time_stamp=datetime.now(), is_manual=True)
+          new_log_data.save()
+          messages.success(request, 'Parameter logged successfully.')
+
+      return redirect('tankhome', tank_id=tank_id)
+
 
 
 class addTank(View):
@@ -203,6 +246,7 @@ def get_enabled(parameters, parameter_name):
     enabled_field = f"{parameter_name.lower()}_enabled"
     return getattr(parameters, enabled_field)
 
+
 class manualInput(View):
     def get(self, request):
         tank_id = request.session.get('tank_id')
@@ -232,4 +276,33 @@ class manualInput(View):
 
         return redirect(f'/tankhome/{tank_id}/')
 
+def log_parameter(request, tank_id):
+    if request.method == 'POST':
+        tank = get_object_or_404(Tank, pk=tank_id)
+        value = request.POST.get('value')
+        parameter_type = request.POST.get('parameter_type')
 
+        # Check if parameter_type is valid
+        if not any(t[0] == parameter_type for t in LogData.types):
+            messages.error(request, 'Invalid parameter type.')
+            return redirect('tankhome', tank_id=tank_id)
+
+        parameter_type_index = LogData.types.index((parameter_type, dict(LogData.types)[parameter_type]))
+
+        new_log_data = LogData(tank=tank, type=parameter_type_index, value=value, time_stamp=datetime.now(), is_manual=True)
+        new_log_data.save()
+        messages.success(request, 'Parameter logged successfully.')
+
+    return redirect('tankhome', tank_id=tank_id)
+
+def tank_data(request, tank_id):
+    tank = get_object_or_404(Tank, pk=tank_id)
+    parameters = tank.parameters
+    log_data = LogData.objects.filter(tank=tank)
+
+    context = {
+        'tank': tank,
+        'parameters': parameters,
+        'log_data': log_data,
+    }
+    return render(request, 'tank_data.html', {'tank': tank, 'log_data': log_data})
