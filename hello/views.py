@@ -88,6 +88,8 @@ class profile(View):
 class TankHomeView(View):
   def get(self, request, tank_id):
     tank = get_object_or_404(Tank, pk=tank_id)
+
+    #Retreive the parameter ranges
     
     # Retrieve log data for each parameter
     log_data_temperature = tank.logdata_set.filter(type=LogData.types.index(('te', 'temp'))).order_by('time_stamp')
@@ -115,6 +117,13 @@ class TankHomeView(View):
         'salinity_timestamps': json.dumps(salinity_timestamps),
         'salinity_values': json.dumps(salinity_values),
         'salinity_enabled': tank.parameters.salinity_enabled if tank.parameters else False,
+        #Parameter ranges
+        'temp_min': tank.parameters.temp_min,
+        'temp_max': tank.parameters.temp_max,
+        'ph_min': tank.parameters.ph_min,
+        'ph_max': tank.parameters.ph_max,
+        'salinity_min': tank.parameters.salinity_min,
+        'salinity_max': tank.parameters.salinity_max,
     }
 
     return render(request, 'hello/TankHome.html', context)
