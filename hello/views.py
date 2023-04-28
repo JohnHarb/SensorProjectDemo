@@ -295,4 +295,14 @@ def log_parameter(request, tank_id):
 
     return redirect('tankhome', tank_id=tank_id)
 
+def tank_data(request, tank_id):
+    tank = get_object_or_404(Tank, pk=tank_id)
+    parameters = tank.parameters
+    log_data = LogData.objects.filter(tank=tank)
 
+    context = {
+        'tank': tank,
+        'parameters': parameters,
+        'log_data': log_data,
+    }
+    return render(request, 'tank_data.html', {'tank': tank, 'log_data': log_data})
