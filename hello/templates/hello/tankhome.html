@@ -10,12 +10,6 @@
         <title>TankHome</title>
     </head>  
     <header>
-        <nav>
-            <a href="/home" style="padding-left: 15px;">Home</a>
-            <div style="float: right; padding-right: 15px;">
-                <a href="/signout/">Log Out</a>
-            </div>
-        </nav>
     </header>   
     <body> 
         <div class="container">
@@ -35,7 +29,7 @@
                             <p>more stats</p>
                         </div>
                         <div class="section">
-                            <a href="/signout/">delete tank</a>
+                            <a href="{% url 'tank_delete' tank.id %}">delete tank</a>
                         </div>
                     </div>
                 </div>
