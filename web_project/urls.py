@@ -26,13 +26,11 @@ urlpatterns = [
     path('tankhome/<int:tank_id>/', views.TankHomeView.as_view(), name='tankhome'),
     path('tankhome/<int:tank_id>/log_parameter/', views.LogParameterView.as_view(), name='log_parameter'),
     path("addtank/", views.addTank.as_view()),
-     path("manualinput/", views.manualInput.as_view()),
     path("aboutus/", views.aboutUs.as_view()),
     path("signout/", views.signOut.as_view()),
     path('tankparams/<int:tank_id>/', views.tankParams.as_view(), name='tank_params'),
     path("deletetank/<int:tank_id>/", views.deleteTank.as_view(), name='tank_delete'),
     path('tank_data/<int:tank_id>/', views.tank_data, name='tank_data'),
-    #path("tankmanage/", views.tankManage.as_view()),
 ]
 
 
