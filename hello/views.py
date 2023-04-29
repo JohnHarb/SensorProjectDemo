@@ -202,3 +202,34 @@ def get_enabled(parameters, parameter_name):
 
     enabled_field = f"{parameter_name.lower()}_enabled"
     return getattr(parameters, enabled_field)
+
+class manualInput(View):
+    def get(self, request):
+        tank_id = request.session.get('tank_id')
+        return redirect(f'/tankhome/{tank_id}/')
+
+    def post(self, request):
+        tank_id = request.session.get('tank_id')
+        tank = get_object_or_404(Tank, id=tank_id)
+
+        nitrate = request.POST.get('nitrate')
+        if nitrate:
+            nitrate = float(nitrate)
+
+        nitrite = request.POST.get('nitrite')
+        if nitrite:
+            nitrite = float(nitrite)
+
+        alkalinity = request.POST.get('alkalinity')
+        if alkalinity:
+            alkalinity = float(alkalinity)
+
+        general_hardness = None
+        if tank.type == 'freshwater':
+            general_hardness = request.POST.get('general-hardness')
+            if general_hardness:
+                general_hardness = float(general_hardness)
+
+        return redirect(f'/tankhome/{tank_id}/')
+
+
