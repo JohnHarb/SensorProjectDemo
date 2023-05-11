@@ -11,6 +11,7 @@ from django.template.defaulttags import register
 import json
 import re
 from .forms import ParametersForm
+from datetime import datetime
 
 regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
 
