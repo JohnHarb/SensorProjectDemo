@@ -1,0 +1,25 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    border: 1px solid #3b4e3b;
+}
+
+h1{
+    float: left; /* Move the form to the right */
+    text-align: center;
+    margin-right: 50px; /* Add space between the header and form */
+    margin-bottom: -120px;
+    font-family: 'DejaVu Sans Mono', monospace;
+}
+
+.section {
+    float: right; /* Move the form to the right */
+    text-align: center;
+    margin: 120px 0; /* Add more space between header and form */
+    align-items: center; /* Align the form to the center */
+    border: 1px solid #3b4e3b;
+    padding: 10px;
+    font-family: 'DejaVu Sans Mono', monospace;
+}
