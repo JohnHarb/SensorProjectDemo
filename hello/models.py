@@ -6,7 +6,7 @@ from phonenumber_field.modelfields import PhoneNumberField  # library for verify
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.core.mail import send_mail
-from sms import send_sms
+#from sms import send_sms
 
 # send_mail(
 #     'Subject here',
@@ -180,12 +180,12 @@ def check_log_data(sender, instance: LogData, created, **kwargs):
             if profile.phone_notifications:
                 print("when text should be sent")
                 message = f"AquaWatch: Tank: {data.tank.name},Parameter: {data.types[data.type][1]}, is out of range. \nReported value: {data.value}"
-                send_sms(
-                    message,
-                    '+12065550100',
-                    [data.tank.user.profile.phone_num],
-                    fail_silently=False
-                )
+                #send_sms(      this is not working properly on my end
+                #    message,
+                #   '+12065550100',
+                #    [data.tank.user.profile.phone_num],
+                #    fail_silently=False
+                #)
 
 
 
