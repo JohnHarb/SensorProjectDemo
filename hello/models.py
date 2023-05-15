@@ -30,10 +30,21 @@ class Profile(models.Model):  # for additional fields attached to User
         return '%s\'s profile' % (self.user.email)
 
 
-@receiver(post_save, sender=User)  # uses signals to create connected profile when a User is created
+@receiver(post_save, sender=User)  # uses signals to create connected profile when a User is created & send signup email
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
-        Profile.objects.create(user=instance)
+        new_profile = Profile.objects.create(user=instance)
+        print("when signup email should be sent")
+        subject = f"AquaWatch: Sign-Up"
+        message = f"Welcome to Aquawatch!"
+        send_mail(
+            subject,
+            message,
+            'from@example.com',
+            [instance.email],
+            fail_silently=False,
+        )
+
 
 
 @receiver(post_save, sender=User)  # uses signals to save profile when its User is saved
