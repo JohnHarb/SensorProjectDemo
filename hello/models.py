@@ -19,6 +19,9 @@ from django.conf import settings
 
 
 # todo tank & general notification class(es)
+from web_project.settings import DEFAULT_FROM_EMAIL
+
+
 class Profile(models.Model):  # for additional fields attached to User
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     # username, password, email, first_name, last_name included in User
@@ -41,8 +44,8 @@ def create_user_profile(sender, instance, created, **kwargs):
         send_mail(
             subject,
             message,
-            'from@example.com',
-            [instance.email],
+            from_email=DEFAULT_FROM_EMAIL,
+            recipient_list=[instance.email],
             fail_silently=False,
         )
 
