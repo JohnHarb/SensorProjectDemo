@@ -182,14 +182,14 @@ def check_log_data(sender, instance: LogData, created, **kwargs):
             if profile.phone_notifications or profile.email_notifications:
                 data.tank.last_notification_time = datetime.datetime.today()
             if profile.email_notifications:
-                print("when email should be sent")
+                print("when param out of range email should be sent")
                 subject = f"AquaWatch: tank, {data.tank.name}, has a parameter out of expected range"
                 message = f"Parameter, {data.types[data.type][1]}, is out of range. \nReported value: {data.value}"
                 send_mail(
                     subject,
                     message,
-                    'from@example.com',
-                    [data.tank.user.email],
+                    from_email=DEFAULT_FROM_EMAIL,
+                    recipient_list= [data.tank.user.email],
                     fail_silently=False,
                 )
             if profile.phone_notifications:
