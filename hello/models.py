@@ -19,6 +19,9 @@ from django.conf import settings
 
 
 # todo tank & general notification class(es)
+from web_project.settings import DEFAULT_FROM_EMAIL
+
+
 class Profile(models.Model):  # for additional fields attached to User
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     # username, password, email, first_name, last_name included in User
@@ -31,10 +34,21 @@ class Profile(models.Model):  # for additional fields attached to User
         return '%s\'s profile' % (self.user.email)
 
 
-@receiver(post_save, sender=User)  # uses signals to create connected profile when a User is created
+@receiver(post_save, sender=User)  # uses signals to create connected profile when a User is created & send signup email
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
-        Profile.objects.create(user=instance)
+        new_profile = Profile.objects.create(user=instance)
+        print("when signup email should be sent")
+        subject = f"AquaWatch: Sign-Up"
+        message = f"Welcome to Aquawatch!"
+        send_mail(
+            subject,
+            message,
+            from_email=DEFAULT_FROM_EMAIL,
+            recipient_list=[instance.email],
+            fail_silently=False,
+        )
+
 
 
 @receiver(post_save, sender=User)  # uses signals to save profile when its User is saved
@@ -168,14 +182,14 @@ def check_log_data(sender, instance: LogData, created, **kwargs):
             if profile.phone_notifications or profile.email_notifications:
                 data.tank.last_notification_time = datetime.datetime.today()
             if profile.email_notifications:
-                print("when email should be sent")
+                print("when param out of range email should be sent")
                 subject = f"AquaWatch: tank, {data.tank.name}, has a parameter out of expected range"
                 message = f"Parameter, {data.types[data.type][1]}, is out of range. \nReported value: {data.value}"
                 send_mail(
                     subject,
                     message,
-                    'from@example.com',
-                    [data.tank.user.email],
+                    from_email=DEFAULT_FROM_EMAIL,
+                    recipient_list= [data.tank.user.email],
                     fail_silently=False,
                 )
             if profile.phone_notifications:
