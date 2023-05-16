@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'phonenumber_field',
     'hello',
     'django_q',
+    'gmailapi_backend',
 ]
 
 MIDDLEWARE = [
@@ -137,13 +138,17 @@ SMS_BACKEND = 'sms.backends.console.SmsBackend'
 
 
 # console backend for testing emails
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-# EMAIL_HOST = 'smtp.gmail.com'
-# EMAIL_HOST_USER = 'myemailaddress@gmail.com'
-# EMAIL_HOST_PASSWORD = 'mypassword'
-# EMAIL_USE_TLS = True
-# EMAIL_PORT = 587
-# DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# gmail backend for better testing
+EMAIL_BACKEND = 'gmailapi_backend.mail.GmailBackend'
+GMAIL_API_CLIENT_ID = '608564128479-jvkggbrqobfijjpb0vsa8q47v2cl7pi9.apps.googleusercontent.com'
+GMAIL_API_CLIENT_SECRET = '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'
+GMAIL_API_REFRESH_TOKEN = '1//04ZeLEav4OzbtCgYIARAAGAQSNwF-L9IrS4PI6FuspSdENfQfSXufNgGRMKrmyvyKvWWt-5Qwm6rnQZo_7z7gV4mNgnHGxiYDVuA'
+GMAIL_API_USER_ID = 'uwm.cawm@gmail.com'
+DEFAULT_FROM_EMAIL = GMAIL_API_USER_ID
+# account password: capstone@uwm
+# NOTE: google cloud account for the project is the same as the gmail above
+DEFAULT_FROM_EMAIL = 'uwm.cawm@gmail.com'
 
 
 # Default primary key field type
