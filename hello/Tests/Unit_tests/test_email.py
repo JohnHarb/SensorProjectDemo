@@ -31,6 +31,9 @@ class EmailTest(TestCase):
         user.profile.email_notifications = True
         user.save()
 
+        self.assertEqual(len(mail.outbox), 1)
+        mail.outbox.clear()
+
         # Within param range: no email expected
         logdata = LogData.objects.create(tank=tank, type=1, value=7.3, time_stamp=datetime.datetime.now())
         logdata.save()
@@ -54,3 +57,15 @@ class EmailTest(TestCase):
 
         self.assertEqual(len(mail.outbox), 1)
 
+    def test_sign_up_email(self):
+        email = "hello@gmail.com"
+        f_name = "Joe"
+        l_name = "Smith"
+        password = "1jhd91hd91"
+
+        self.assertEqual(len(mail.outbox), 0)
+
+        user = User.objects.create(username=email, email=email, first_name=f_name, last_name=l_name, password=password)
+        user.save()
+
+        self.assertEqual(len(mail.outbox), 1)
