@@ -195,12 +195,12 @@ def check_log_data(sender, instance: LogData, created, **kwargs):
             if profile.phone_notifications:
                 print("when text should be sent")
                 message = f"AquaWatch: Tank: {data.tank.name},Parameter: {data.types[data.type][1]}, is out of range. \nReported value: {data.value}"
-                send_sms(
-                    message,
-                    '+12065550100',
-                    [data.tank.user.profile.phone_num],
-                    fail_silently=False
-                )
+                #send_sms(      this is not working properly on my end
+                #    message,
+                #   '+12065550100',
+                #    [data.tank.user.profile.phone_num],
+                #    fail_silently=False
+                #)
 
 
 
