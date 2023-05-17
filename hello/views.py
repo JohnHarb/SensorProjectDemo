@@ -221,7 +221,7 @@ class tankParams(View):
           print(form.cleaned_data)
           form.save()
           messages.success(request, 'Parameters saved successfully')
-          return redirect('tank_params', tank_id=tank_id)
+          return redirect('tankhome', tank_id=tank_id)
       else:
           messages.error(request, 'There was an error saving the parameters')
           print(form.errors)
