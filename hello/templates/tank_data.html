@@ -1,30 +1,37 @@
 {% extends "hello/Nav.html" %}
 {% block content %}
+{% load static %}
 <html>
 <head>
     <meta charset="utf-8" />
+    <link rel="stylesheet" href="{% static 'css/tankData.css' %}"/>
     <title>Raw Data - {{ tank.name }}</title>
 </head>
 <body>
     <h1>Raw Data for {{ tank.name }}</h1>
-    <table>
+<div class="table-responsive">
+    <table class="styled-table">
         <thead>
             <tr>
-                <th>Timestamp</th>
-                <th>Parameter Type</th>
+                <th>Type</th>
                 <th>Value</th>
+                <th>Timestamp</th>
+                <!-- Add more column headers as needed -->
             </tr>
         </thead>
         <tbody>
             {% for data in raw_data %}
-                <tr>
-                    <td>{{ data.timestamp }}</td>
-                    <td>{{ data.parameter_type }}</td>
-                    <td>{{ data.value }}</td>
-                </tr>
+            <tr>
+                <td>{{ data.type }}</td>
+                <td>{{ data.value }}</td>
+                <td>{{ data.time_stamp }}</td>
+                <!-- Add more data fields as needed -->
+            </tr>
             {% endfor %}
         </tbody>
     </table>
+</div>
+
 </body>
 </html>
 {% endblock %}

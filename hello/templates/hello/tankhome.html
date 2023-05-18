@@ -61,7 +61,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <h2>Temperature Chart</h2>
-                    <canvas id="temperatureChart"></canvas>
+                    <canvas id="temperatureChart" class="chart"></canvas>
                 </div>
             </div>
         {% endif %}
@@ -70,7 +70,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <h2>pH Chart</h2>
-                    <canvas id="phChart"></canvas>
+                    <canvas id="phChart" class="chart"></canvas>
                 </div>
             </div>
         {% endif %}
@@ -107,7 +107,7 @@ function createChart(chartId, label, timestamps, values, min, max) {
             const yAxis = chart.scales.y;
 
             ctx.save();
-            ctx.fillStyle = 'red';
+            ctx.fillStyle = 'rgba(255, 0, 0, 0.5)';
 
             if (yAxis.min < min) {
                 const yMax = yAxis.getPixelForValue(max);

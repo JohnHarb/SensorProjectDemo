@@ -221,7 +221,7 @@ class tankParams(View):
           print(form.cleaned_data)
           form.save()
           messages.success(request, 'Parameters saved successfully')
-          return redirect('tank_params', tank_id=tank_id)
+          return redirect('tankhome', tank_id=tank_id)
       else:
           messages.error(request, 'There was an error saving the parameters')
           print(form.errors)
@@ -258,11 +258,19 @@ def log_parameter(request, tank_id):
 def tank_data(request, tank_id):
     tank = get_object_or_404(Tank, pk=tank_id)
     parameters = tank.parameters
-    log_data = LogData.objects.filter(tank=tank)
+    raw_data = LogData.objects.filter(tank=tank)
+    raw_data_list = []
+
+    raw_data_list = []
+    for data in raw_data:
+        data_dict = model_to_dict(data)  # Convert the LogData instance to a dictionary
+        data_dict['type'] = LogData.types[data.type][1]  # Replace 'type' with its string representation
+        raw_data_list.append(data_dict)
 
     context = {
         'tank': tank,
         'parameters': parameters,
-        'log_data': log_data,
+        'raw_data': raw_data_list,
     }
-    return render(request, 'tank_data.html', {'tank': tank, 'log_data': log_data})
+    return render(request, 'tank_data.html', context)
+

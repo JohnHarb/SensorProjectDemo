@@ -249,3 +249,4 @@ modules.xml
 
 # End of https://www.toptal.com/developers/gitignore/api/django,pycharm+all
 /hello/migrations/__init__.py
+web_project/.DS_Store
